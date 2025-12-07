@@ -53,6 +53,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 )} />
               </a>
             </Link>
+            <Link href="/admin">
+              <a className={cn(
+                "text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors relative group",
+                location === "/admin" ? "text-primary" : "text-muted-foreground"
+              )}>
+                Admin
+                <span className={cn(
+                  "absolute -bottom-5 left-0 w-full h-0.5 bg-primary transition-transform origin-left",
+                  location === "/admin" ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                )} />
+              </a>
+            </Link>
           </nav>
         </div>
         {/* Glowing Line */}
