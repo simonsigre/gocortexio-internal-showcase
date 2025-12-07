@@ -1,0 +1,235 @@
+2025-12-07T06:47:00.7912541Z Current runner version: '2.329.0'
+2025-12-07T06:47:00.7968944Z ##[group]Runner Image Provisioner
+2025-12-07T06:47:00.7970229Z Hosted Compute Agent
+2025-12-07T06:47:00.7971062Z Version: 20251124.448
+2025-12-07T06:47:00.7992698Z Commit: fda5086b43ec66ade217e5fcd18146c879571177
+2025-12-07T06:47:00.7993841Z Build Date: 2025-11-24T21:16:26Z
+2025-12-07T06:47:00.7994795Z ##[endgroup]
+2025-12-07T06:47:00.7995765Z ##[group]Operating System
+2025-12-07T06:47:00.7996638Z Ubuntu
+2025-12-07T06:47:00.7997465Z 24.04.3
+2025-12-07T06:47:00.7998387Z LTS
+2025-12-07T06:47:00.7999192Z ##[endgroup]
+2025-12-07T06:47:00.7999970Z ##[group]Runner Image
+2025-12-07T06:47:00.8001008Z Image: ubuntu-24.04
+2025-12-07T06:47:00.8002130Z Version: 20251126.144.1
+2025-12-07T06:47:00.8003970Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251126.144/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-07T06:47:00.8006705Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251126.144
+2025-12-07T06:47:00.8008326Z ##[endgroup]
+2025-12-07T06:47:00.8010198Z ##[group]GITHUB_TOKEN Permissions
+2025-12-07T06:47:00.8023462Z Contents: read
+2025-12-07T06:47:00.8024462Z Metadata: read
+2025-12-07T06:47:00.8025430Z Pages: write
+2025-12-07T06:47:00.8026238Z ##[endgroup]
+2025-12-07T06:47:00.8029243Z Secret source: Actions
+2025-12-07T06:47:00.8030791Z Prepare workflow directory
+2025-12-07T06:47:00.8896448Z Prepare all required actions
+2025-12-07T06:47:00.8996500Z Getting action download info
+2025-12-07T06:47:01.2481456Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-07T06:47:01.8103871Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2025-12-07T06:47:02.0948993Z Download action repository 'actions/upload-pages-artifact@v3' (SHA:56afc609e74202658d3ffba0e8f6dda462b719fa)
+2025-12-07T06:47:03.0227706Z Getting action download info
+2025-12-07T06:47:03.1319595Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-07T06:47:03.7657698Z Complete job name: build
+2025-12-07T06:47:03.8367733Z ##[group]Run actions/checkout@v4
+2025-12-07T06:47:03.8368535Z with:
+2025-12-07T06:47:03.8368914Z   repository: simonsigre/pilot-gocortexio-showcase
+2025-12-07T06:47:03.8369643Z   token: ***
+2025-12-07T06:47:03.8369947Z   ssh-strict: true
+2025-12-07T06:47:03.8370251Z   ssh-user: git
+2025-12-07T06:47:03.8370571Z   persist-credentials: true
+2025-12-07T06:47:03.8370922Z   clean: true
+2025-12-07T06:47:03.8371459Z   sparse-checkout-cone-mode: true
+2025-12-07T06:47:03.8371862Z   fetch-depth: 1
+2025-12-07T06:47:03.8372170Z   fetch-tags: false
+2025-12-07T06:47:03.8372496Z   show-progress: true
+2025-12-07T06:47:03.8372817Z   lfs: false
+2025-12-07T06:47:03.8373112Z   submodules: false
+2025-12-07T06:47:03.8373438Z   set-safe-directory: true
+2025-12-07T06:47:03.8374192Z ##[endgroup]
+2025-12-07T06:47:03.9644710Z Syncing repository: simonsigre/pilot-gocortexio-showcase
+2025-12-07T06:47:03.9646097Z ##[group]Getting Git version info
+2025-12-07T06:47:03.9646674Z Working directory is '/home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase'
+2025-12-07T06:47:03.9647292Z [command]/usr/bin/git version
+2025-12-07T06:47:04.3962395Z git version 2.52.0
+2025-12-07T06:47:04.4002487Z ##[endgroup]
+2025-12-07T06:47:04.4020233Z Temporarily overriding HOME='/home/runner/work/_temp/e06bacba-a317-4677-b186-c785b74e9eb2' before making global git config changes
+2025-12-07T06:47:04.4022974Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-07T06:47:04.4040990Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase
+2025-12-07T06:47:04.4087116Z Deleting the contents of '/home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase'
+2025-12-07T06:47:04.4092941Z ##[group]Initializing the repository
+2025-12-07T06:47:04.4098304Z [command]/usr/bin/git init /home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase
+2025-12-07T06:47:04.4219919Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-07T06:47:04.4223283Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-07T06:47:04.4227073Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-07T06:47:04.4227724Z hint: call:
+2025-12-07T06:47:04.4228034Z hint:
+2025-12-07T06:47:04.4228506Z hint: 	git config --global init.defaultBranch <name>
+2025-12-07T06:47:04.4229025Z hint:
+2025-12-07T06:47:04.4229525Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-07T06:47:04.4230391Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-07T06:47:04.4231043Z hint:
+2025-12-07T06:47:04.4233068Z hint: 	git branch -m <name>
+2025-12-07T06:47:04.4233535Z hint:
+2025-12-07T06:47:04.4234137Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-07T06:47:04.4235365Z Initialized empty Git repository in /home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase/.git/
+2025-12-07T06:47:04.4243215Z [command]/usr/bin/git remote add origin https://github.com/simonsigre/pilot-gocortexio-showcase
+2025-12-07T06:47:04.4283857Z ##[endgroup]
+2025-12-07T06:47:04.4284489Z ##[group]Disabling automatic garbage collection
+2025-12-07T06:47:04.4288712Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-07T06:47:04.4322454Z ##[endgroup]
+2025-12-07T06:47:04.4325223Z ##[group]Setting up auth
+2025-12-07T06:47:04.4330565Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-07T06:47:04.4364957Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-07T06:47:04.4733156Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-07T06:47:04.4766657Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-07T06:47:04.5005825Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-07T06:47:04.5046624Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-07T06:47:04.5280877Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-07T06:47:04.5317709Z ##[endgroup]
+2025-12-07T06:47:04.5318452Z ##[group]Fetching the repository
+2025-12-07T06:47:04.5327088Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +2e3578092ac3eeb9f1b634dfe02f77abb5c8b690:refs/remotes/origin/main
+2025-12-07T06:47:04.9617176Z From https://github.com/simonsigre/pilot-gocortexio-showcase
+2025-12-07T06:47:04.9744309Z  * [new ref]         2e3578092ac3eeb9f1b634dfe02f77abb5c8b690 -> origin/main
+2025-12-07T06:47:04.9747202Z ##[endgroup]
+2025-12-07T06:47:04.9747792Z ##[group]Determining the checkout info
+2025-12-07T06:47:04.9748456Z ##[endgroup]
+2025-12-07T06:47:04.9748836Z [command]/usr/bin/git sparse-checkout disable
+2025-12-07T06:47:04.9749943Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-07T06:47:04.9761631Z ##[group]Checking out the ref
+2025-12-07T06:47:04.9770916Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-07T06:47:04.9909393Z Switched to a new branch 'main'
+2025-12-07T06:47:04.9912996Z branch 'main' set up to track 'origin/main'.
+2025-12-07T06:47:04.9925675Z ##[endgroup]
+2025-12-07T06:47:04.9959502Z [command]/usr/bin/git log -1 --format=%H
+2025-12-07T06:47:04.9982415Z 2e3578092ac3eeb9f1b634dfe02f77abb5c8b690
+2025-12-07T06:47:05.0282837Z ##[group]Run actions/setup-node@v4
+2025-12-07T06:47:05.0283331Z with:
+2025-12-07T06:47:05.0283939Z   node-version: 20
+2025-12-07T06:47:05.0284261Z   cache: npm
+2025-12-07T06:47:05.0284545Z   always-auth: false
+2025-12-07T06:47:05.0284900Z   check-latest: false
+2025-12-07T06:47:05.0285453Z   token: ***
+2025-12-07T06:47:05.0285766Z ##[endgroup]
+2025-12-07T06:47:05.2326646Z Found in cache @ /opt/hostedtoolcache/node/20.19.6/x64
+2025-12-07T06:47:05.2334323Z ##[group]Environment details
+2025-12-07T06:47:05.6614435Z node: v20.19.6
+2025-12-07T06:47:05.6616343Z npm: 10.8.2
+2025-12-07T06:47:05.6616645Z yarn: 1.22.22
+2025-12-07T06:47:05.6617360Z ##[endgroup]
+2025-12-07T06:47:05.6644479Z [command]/opt/hostedtoolcache/node/20.19.6/x64/bin/npm config get cache
+2025-12-07T06:47:05.8493371Z /home/runner/.npm
+2025-12-07T06:47:06.0600227Z Cache hit for: node-cache-Linux-x64-npm-eabb587a8e78d2b1a08ae1e80d846481f37445df57a0fe07e80a83473c5ea14a
+2025-12-07T06:47:06.9930573Z Received 52297205 of 52297205 (100.0%), 70.1 MBs/sec
+2025-12-07T06:47:06.9931972Z Cache Size: ~50 MB (52297205 B)
+2025-12-07T06:47:06.9969493Z [command]/usr/bin/tar -xf /home/runner/work/_temp/78ae588a-7812-49c2-8022-e71d7d3c97d3/cache.tzst -P -C /home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase --use-compress-program unzstd
+2025-12-07T06:47:07.1756463Z Cache restored successfully
+2025-12-07T06:47:07.1864170Z Cache restored from key: node-cache-Linux-x64-npm-eabb587a8e78d2b1a08ae1e80d846481f37445df57a0fe07e80a83473c5ea14a
+2025-12-07T06:47:07.2017185Z ##[group]Run npm ci
+2025-12-07T06:47:07.2017467Z [36;1mnpm ci[0m
+2025-12-07T06:47:07.2061552Z shell: /usr/bin/bash -e {0}
+2025-12-07T06:47:07.2061812Z ##[endgroup]
+2025-12-07T06:47:11.0829497Z npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+2025-12-07T06:47:11.2421758Z npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+2025-12-07T06:47:15.5350300Z 
+2025-12-07T06:47:15.5354342Z added 442 packages, and audited 443 packages in 8s
+2025-12-07T06:47:15.5365402Z 
+2025-12-07T06:47:15.5367059Z 42 packages are looking for funding
+2025-12-07T06:47:15.5372253Z   run `npm fund` for details
+2025-12-07T06:47:15.5626329Z 
+2025-12-07T06:47:15.5627170Z 6 vulnerabilities (2 low, 4 moderate)
+2025-12-07T06:47:15.5633131Z 
+2025-12-07T06:47:15.5633762Z To address issues that do not require attention, run:
+2025-12-07T06:47:15.5634327Z   npm audit fix
+2025-12-07T06:47:15.5634540Z 
+2025-12-07T06:47:15.5635038Z To address all issues (including breaking changes), run:
+2025-12-07T06:47:15.5635670Z   npm audit fix --force
+2025-12-07T06:47:15.5635928Z 
+2025-12-07T06:47:15.5636146Z Run `npm audit` for details.
+2025-12-07T06:47:15.6104202Z ##[group]Run npx vite build --base /pilot-gocortexio-showcase/
+2025-12-07T06:47:15.6104714Z [36;1mnpx vite build --base /pilot-gocortexio-showcase/[0m
+2025-12-07T06:47:15.6136906Z shell: /usr/bin/bash -e {0}
+2025-12-07T06:47:15.6137138Z ##[endgroup]
+2025-12-07T06:47:16.3772867Z [36mvite v7.1.12 [32mbuilding for production...[36m[39m
+2025-12-07T06:47:16.4575038Z transforming...
+2025-12-07T06:47:23.1990014Z [32m✓[39m 2558 modules transformed.
+2025-12-07T06:47:23.9112283Z rendering chunks...
+2025-12-07T06:47:23.9202536Z [meta-images] no Replit deployment domain found, skipping meta tag updates
+2025-12-07T06:47:23.9264066Z computing gzip size...
+2025-12-07T06:47:23.9553183Z [2m../dist/public/[22m[32mindex.html                 [39m[1m[2m  1.47 kB[22m[1m[22m[2m │ gzip:   0.58 kB[22m
+2025-12-07T06:47:23.9557485Z [2m../dist/public/[22m[2massets/[22m[35mindex-CTM_b2JK.css  [39m[1m[2m105.02 kB[22m[1m[22m[2m │ gzip:  17.17 kB[22m
+2025-12-07T06:47:23.9559279Z [33m
+2025-12-07T06:47:23.9560388Z [2m../dist/public/[22m[2massets/[22m[36mindex-DnRsPHb1.js   [39m[1m[33m619.90 kB[39m[22m[2m │ gzip: 194.83 kB[22m
+2025-12-07T06:47:23.9563128Z [32m✓ built in 7.55s[39m
+2025-12-07T06:47:23.9564161Z (!) Some chunks are larger than 500 kB after minification. Consider:
+2025-12-07T06:47:23.9566251Z - Using dynamic import() to code-split the application
+2025-12-07T06:47:23.9568003Z - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2025-12-07T06:47:23.9571352Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+2025-12-07T06:47:24.0534720Z ##[group]Run actions/upload-pages-artifact@v3
+2025-12-07T06:47:24.0535187Z with:
+2025-12-07T06:47:24.0535468Z   path: ./dist/public
+2025-12-07T06:47:24.0535786Z   name: github-pages
+2025-12-07T06:47:24.0536101Z   retention-days: 1
+2025-12-07T06:47:24.0536397Z ##[endgroup]
+2025-12-07T06:47:24.0634960Z ##[group]Run echo ::group::Archive artifact
+2025-12-07T06:47:24.0635454Z [36;1mecho ::group::Archive artifact[0m
+2025-12-07T06:47:24.0635847Z [36;1mtar \[0m
+2025-12-07T06:47:24.0636195Z [36;1m  --dereference --hard-dereference \[0m
+2025-12-07T06:47:24.0636664Z [36;1m  --directory "$INPUT_PATH" \[0m
+2025-12-07T06:47:24.0637123Z [36;1m  -cvf "$RUNNER_TEMP/artifact.tar" \[0m
+2025-12-07T06:47:24.0637545Z [36;1m  --exclude=.git \[0m
+2025-12-07T06:47:24.0637908Z [36;1m  --exclude=.github \[0m
+2025-12-07T06:47:24.0638284Z [36;1m  .[0m
+2025-12-07T06:47:24.0638566Z [36;1mecho ::endgroup::[0m
+2025-12-07T06:47:24.0866732Z shell: /usr/bin/sh -e {0}
+2025-12-07T06:47:24.0867171Z env:
+2025-12-07T06:47:24.0867452Z   INPUT_PATH: ./dist/public
+2025-12-07T06:47:24.0867816Z ##[endgroup]
+2025-12-07T06:47:24.0974533Z ##[group]Archive artifact
+2025-12-07T06:47:24.0992582Z ./
+2025-12-07T06:47:24.0995774Z ./index.html
+2025-12-07T06:47:24.0999645Z ./assets/
+2025-12-07T06:47:24.1003672Z ./assets/index-DnRsPHb1.js
+2025-12-07T06:47:24.1022677Z ./assets/index-CTM_b2JK.css
+2025-12-07T06:47:24.1023390Z ./favicon.png
+2025-12-07T06:47:24.1032729Z ./opengraph.png
+2025-12-07T06:47:24.1044457Z ./projects.json
+2025-12-07T06:47:24.1051823Z ##[endgroup]
+2025-12-07T06:47:24.1135407Z ##[group]Run actions/upload-artifact@v4
+2025-12-07T06:47:24.1135809Z with:
+2025-12-07T06:47:24.1136076Z   name: github-pages
+2025-12-07T06:47:24.1136430Z   path: /home/runner/work/_temp/artifact.tar
+2025-12-07T06:47:24.1136863Z   retention-days: 1
+2025-12-07T06:47:24.1137173Z   if-no-files-found: error
+2025-12-07T06:47:24.1137518Z   compression-level: 6
+2025-12-07T06:47:24.1137826Z   overwrite: false
+2025-12-07T06:47:24.1138147Z   include-hidden-files: false
+2025-12-07T06:47:24.1138503Z ##[endgroup]
+2025-12-07T06:47:24.4330101Z With the provided path, there will be 1 file uploaded
+2025-12-07T06:47:24.4342733Z Artifact name is valid!
+2025-12-07T06:47:24.4343512Z Root directory input is valid!
+2025-12-07T06:47:24.6355829Z Beginning upload of artifact content to blob storage
+2025-12-07T06:47:25.0827502Z Uploaded bytes 1698466
+2025-12-07T06:47:25.1257575Z Finished uploading artifact content to blob storage!
+2025-12-07T06:47:25.1263235Z SHA256 digest of uploaded artifact zip is 90b0cff02b4f23111f5ca30ecfe1bd1c038e3bd99e2250b434dc3af2b1aafb0c
+2025-12-07T06:47:25.1266559Z Finalizing artifact upload
+2025-12-07T06:47:25.2188370Z Artifact github-pages.zip successfully finalized. Artifact ID 4788841169
+2025-12-07T06:47:25.2189837Z Artifact github-pages has been successfully uploaded! Final size is 1698466 bytes. Artifact ID is 4788841169
+2025-12-07T06:47:25.2199959Z Artifact download URL: https://github.com/simonsigre/pilot-gocortexio-showcase/actions/runs/20000442897/artifacts/4788841169
+2025-12-07T06:47:25.2358103Z Post job cleanup.
+2025-12-07T06:47:25.3927358Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-eabb587a8e78d2b1a08ae1e80d846481f37445df57a0fe07e80a83473c5ea14a, not saving cache.
+2025-12-07T06:47:25.4024774Z Post job cleanup.
+2025-12-07T06:47:25.4987407Z [command]/usr/bin/git version
+2025-12-07T06:47:25.5028417Z git version 2.52.0
+2025-12-07T06:47:25.5079576Z Temporarily overriding HOME='/home/runner/work/_temp/fdfeab21-fb8f-4eb8-b423-d95933a3890d' before making global git config changes
+2025-12-07T06:47:25.5082966Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-07T06:47:25.5084548Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/pilot-gocortexio-showcase/pilot-gocortexio-showcase
+2025-12-07T06:47:25.5128854Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-07T06:47:25.5165307Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-07T06:47:25.5467295Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-07T06:47:25.5522107Z http.https://github.com/.extraheader
+2025-12-07T06:47:25.5526988Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-07T06:47:25.5580268Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-07T06:47:25.5939079Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-07T06:47:25.5994166Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-07T06:47:25.6468999Z Cleaning up orphan processes

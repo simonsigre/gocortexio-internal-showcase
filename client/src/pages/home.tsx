@@ -30,7 +30,8 @@ export default function Home() {
       ? import.meta.env.BASE_URL 
       : `${import.meta.env.BASE_URL}/`;
       
-    const projectsUrl = `${baseUrl}projects.json`;
+    // Cache busting: Add a timestamp query param to force a fresh fetch
+    const projectsUrl = `${baseUrl}projects.json?t=${new Date().getTime()}`;
     console.log("Fetching projects from:", projectsUrl);
 
     fetch(projectsUrl)
