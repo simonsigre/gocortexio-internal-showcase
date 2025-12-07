@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const PROJECTS_PATH = path.join(__dirname, '../client/public/projects.json');
 
 async function enrichData() {
-  console.log('✨ Starting Data Enrichment...');
+  console.log('[INFO] Starting Data Enrichment...');
   
   try {
     const rawData = fs.readFileSync(PROJECTS_PATH, 'utf-8');
@@ -18,7 +18,7 @@ async function enrichData() {
     const token = process.env.GITHUB_TOKEN;
 
     if (!token) {
-      console.warn('⚠️ No GITHUB_TOKEN found. Skipping API enrichment.');
+      console.warn('[WARN] No GITHUB_TOKEN found. Skipping API enrichment.');
       return; 
     }
 
@@ -35,7 +35,7 @@ async function enrichData() {
 
           if (response.ok) {
             const data = await response.json();
-            console.log(`   ✅ Enriched ${project.name}: ⭐ ${data.stargazers_count} | 🍴 ${data.forks_count}`);
+            console.log(`   [OK] Enriched ${project.name}: [STAR] ${data.stargazers_count} | [FORK] ${data.forks_count}`);
             
             enrichedProjects.push({
               ...project,
@@ -47,12 +47,12 @@ async function enrichData() {
               language: data.language || project.language // Sync language
             });
           } else {
-            console.error(`   ❌ Failed to fetch ${project.repo}: ${response.status} ${response.statusText}`);
+            console.error(`   [ERROR] Failed to fetch ${project.repo}: ${response.status} ${response.statusText}`);
             // Keep original data if fetch fails (unless it's a 404 which validation script handles)
             enrichedProjects.push(project); 
           }
         } catch (error) {
-          console.error(`   ❌ Error fetching ${project.repo}:`, error);
+          console.error(`   [ERROR] Error fetching ${project.repo}:`, error);
           enrichedProjects.push(project);
         }
       } else {
@@ -61,10 +61,10 @@ async function enrichData() {
     }
 
     fs.writeFileSync(PROJECTS_PATH, JSON.stringify(enrichedProjects, null, 2));
-    console.log(`✅ Successfully enriched ${enrichedProjects.length} projects.`);
+    console.log(`[PASS] Successfully enriched ${enrichedProjects.length} projects.`);
 
   } catch (error) {
-    console.error('❌ Enrichment failed:', error);
+    console.error('[FAIL] Enrichment failed:', error);
     process.exit(1);
   }
 }

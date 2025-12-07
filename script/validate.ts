@@ -16,7 +16,7 @@ const BAD_WORDS = [
 ];
 
 async function validateProjects() {
-  console.log('🛡️  Starting Security & Quality Validation...');
+  console.log('[INFO] Starting Security & Quality Validation...');
   
   try {
     const rawData = fs.readFileSync(PROJECTS_PATH, 'utf-8');
@@ -30,7 +30,7 @@ async function validateProjects() {
       const foundBadWord = BAD_WORDS.find(word => content.includes(word));
       
       if (foundBadWord) {
-        console.error(`❌ [CONTENT SAFETY] Project "${project.name}" contains offensive term: "${foundBadWord}"`);
+        console.error(`[ERROR] [CONTENT SAFETY] Project "${project.name}" contains offensive term: "${foundBadWord}"`);
         hasErrors = true;
       }
 
@@ -43,24 +43,24 @@ async function validateProjects() {
            });
 
            if (response.status === 404 || response.status === 410) {
-             console.error(`❌ [DEAD LINK] Project "${project.name}" repository is gone (${response.status}): ${project.repo}`);
+             console.error(`[ERROR] [DEAD LINK] Project "${project.name}" repository is gone (${response.status}): ${project.repo}`);
              hasErrors = true;
            }
          } catch (e) {
-            console.warn(`⚠️ Could not verify link for ${project.name}:`, e);
+            console.warn(`[WARN] Could not verify link for ${project.name}:`, e);
          }
       }
     }
 
     if (hasErrors) {
-      console.error('⛔ Validation Failed! Fix the issues above to deploy.');
+      console.error('[FAIL] Validation Failed! Fix the issues above to deploy.');
       process.exit(1);
     } else {
-      console.log('✅ All checks passed.');
+      console.log('[PASS] All checks passed.');
     }
 
   } catch (error) {
-    console.error('❌ Validation script error:', error);
+    console.error('[FAIL] Validation script error:', error);
     process.exit(1);
   }
 }
