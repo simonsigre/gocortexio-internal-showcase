@@ -17,6 +17,7 @@ When moving this to your corporate GitHub repository, you only need the followin
 ├── package-lock.json     <-- Exact versions (CRITICAL for deployment)
 ├── tsconfig.json         <-- TypeScript config
 ├── vite.config.ts        <-- Build config
+├── vite-plugin-meta-images.ts  <-- Replit meta tag plugin (Optional, but included in config)
 └── client/src/index.css  <-- Styling config (Tailwind v4 embedded)
 ```
 
