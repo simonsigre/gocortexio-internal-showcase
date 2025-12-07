@@ -398,7 +398,7 @@ export default function SubmitPage() {
             "absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200",
             !jsonOutput && "hidden"
           )}></div>
-          <div className="relative bg-black border border-border rounded-lg min-h-[500px] flex flex-col">
+          <div className="relative bg-white border border-border rounded-lg min-h-[500px] flex flex-col">
             <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/10">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <FileJson className="w-4 h-4" />
@@ -427,7 +427,7 @@ export default function SubmitPage() {
             </div>
             <div className="flex-1 p-4 font-mono text-sm overflow-auto custom-scrollbar">
               {jsonOutput ? (
-                <pre className="text-green-400 whitespace-pre-wrap break-all">
+                <pre className="text-black whitespace-pre-wrap break-all">
                   {jsonOutput}
                 </pre>
               ) : (
