@@ -29,8 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           <nav className="flex items-center gap-6">
-            <Link href="/">
-              <a className={cn(
+            <Link href="/" className={cn(
                 "text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors relative group",
                 location === "/" ? "text-primary" : "text-muted-foreground"
               )}>
@@ -39,10 +38,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   "absolute -bottom-5 left-0 w-full h-0.5 bg-primary transition-transform origin-left",
                   location === "/" ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                 )} />
-              </a>
             </Link>
-            <Link href="/submit">
-              <a className={cn(
+            <Link href="/submit" className={cn(
                 "text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors relative group",
                 location === "/submit" ? "text-primary" : "text-muted-foreground"
               )}>
@@ -51,10 +48,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   "absolute -bottom-5 left-0 w-full h-0.5 bg-primary transition-transform origin-left",
                   location === "/submit" ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                 )} />
-              </a>
             </Link>
-            <Link href="/admin">
-              <a className={cn(
+            <Link href="/admin" className={cn(
                 "text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors relative group",
                 location === "/admin" ? "text-primary" : "text-muted-foreground"
               )}>
@@ -63,7 +58,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   "absolute -bottom-5 left-0 w-full h-0.5 bg-primary transition-transform origin-left",
                   location === "/admin" ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                 )} />
-              </a>
             </Link>
           </nav>
         </div>
