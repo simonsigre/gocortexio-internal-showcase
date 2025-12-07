@@ -58,28 +58,49 @@ export default function SubmitPage() {
     });
   };
 
+  const downloadJson = () => {
+    if (!jsonOutput) return;
+    const blob = new Blob([jsonOutput], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "project.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({
+      title: "Downloaded project.json",
+      description: "Now upload this file to the GitHub repository.",
+    });
+  };
+
   return (
     <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
           <p className="text-muted-foreground mb-4">
-            Fill in the details below to generate the JSON payload for your project.
+            Generate a project definition file to contribute to the showcase.
           </p>
           
-          <div className="bg-muted/30 border border-border rounded-md p-4 text-sm space-y-2 mb-6 font-mono">
-            <p className="font-bold text-primary">FILE STRUCTURE GUIDE:</p>
-            <p>To avoid file name collisions, please create a unique folder structure:</p>
-            <div className="bg-black/50 p-3 rounded border border-border/50 text-xs text-muted-foreground">
-              projects/<br/>
-              ├── <span className="text-blue-400">your-username</span>/<br/>
-              │   └── <span className="text-green-400">project-slug</span>/<br/>
-              │       ├── <span className="text-white">project.json</span>   (Paste generated JSON here)<br/>
-              │       └── <span className="text-white">thumbnail.png</span>  (Optional image)<br/>
+          <div className="bg-muted/30 border border-border rounded-md p-4 text-sm space-y-4 mb-6">
+            <div>
+              <h3 className="font-bold text-primary uppercase tracking-wider text-xs mb-2">How it works</h3>
+              <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
+                <li>Fill out the form to generate your project metadata</li>
+                <li>Download the <code className="text-primary">project.json</code> file</li>
+                <li>Create a Pull Request in the repository</li>
+                <li>Once merged, the site automatically rebuilds and deploys</li>
+              </ol>
             </div>
-            <p className="text-[10px] text-muted-foreground italic mt-2 border-t border-border/30 pt-2">
-              * A date field will be automatically added to your JSON payload with today's date ({new Date().toISOString().split('T')[0]})
-            </p>
+
+            <div className="bg-black/50 p-3 rounded border border-border/50 text-xs text-muted-foreground font-mono">
+              <p className="mb-2 text-primary font-bold">GITHUB WEB UI TRICK:</p>
+              <p>When adding a file on GitHub, you can create folders by typing:</p>
+              <p className="mt-2 text-white">projects/my-name/my-project/project.json</p>
+              <p className="mt-1 italic opacity-70">Typing the slashes (/) will automatically create the folders for you.</p>
+            </div>
           </div>
         </div>
 
@@ -403,6 +424,16 @@ export default function SubmitPage() {
               >
                 {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                 {copied ? "Copied" : "Copy JSON"}
+              </Button>
+              <Button 
+                variant="default" 
+                size="sm" 
+                className="h-8 text-xs gap-2 bg-primary text-black hover:bg-primary/90 font-bold"
+                onClick={downloadJson}
+                disabled={!jsonOutput}
+              >
+                <FileJson className="w-3 h-3" />
+                Download File
               </Button>
             </div>
             <div className="flex-1 p-4 font-mono text-sm overflow-auto custom-scrollbar">
