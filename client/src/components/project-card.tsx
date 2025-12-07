@@ -8,14 +8,14 @@ import { cn } from "@/lib/utils";
 import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
-const STATUS_COLORS = {
+const STATUS_COLOURS = {
   active: "text-[#00cd67] border-[#00cd67] bg-[#00cd67]/10",
   development: "text-[#f0a020] border-[#f0a020] bg-[#f0a020]/10",
   beta: "text-[#4a9eff] border-[#4a9eff] bg-[#4a9eff]/10",
   deprecated: "text-[#ff4444] border-[#ff4444] bg-[#ff4444]/10",
 };
 
-const LANGUAGE_COLORS: Record<string, string> = {
+const LANGUAGE_COLOURS: Record<string, string> = {
   JavaScript: "#f1e05a",
   TypeScript: "#2b7489",
   Python: "#3572A5",
@@ -36,7 +36,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
 
 export function ProjectCard({ project }: { project: Project }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const statusClass = STATUS_COLORS[project.status as keyof typeof STATUS_COLORS] || STATUS_COLORS.development;
+  const statusClass = STATUS_COLOURS[project.status as keyof typeof STATUS_COLOURS] || STATUS_COLOURS.development;
 
   return (
     <motion.div
@@ -137,7 +137,7 @@ export function ProjectCard({ project }: { project: Project }) {
              <div className="flex items-center gap-2">
                 <div 
                   className="w-2.5 h-2.5 rounded-full" 
-                  style={{ backgroundColor: LANGUAGE_COLORS[project.language] || LANGUAGE_COLORS.Default }}
+                  style={{ backgroundColor: LANGUAGE_COLOURS[project.language] || LANGUAGE_COLOURS.Default }}
                 />
                 <span className="text-xs font-mono text-muted-foreground">{project.language}</span>
                 {project.githubApi && project.repo && (

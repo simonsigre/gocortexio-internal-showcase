@@ -64,7 +64,7 @@ export default function SubmitPage() {
         <div>
           <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
           <p className="text-muted-foreground">
-            Fill out the details below to generate the JSON payload for your project.
+            Fill in the details below to generate the JSON payload for your project.
             Once generated, create a new file in the <code className="bg-muted px-1 py-0.5 rounded text-primary">projects/</code> directory of the repo.
           </p>
         </div>
@@ -374,7 +374,7 @@ export default function SubmitPage() {
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-muted-foreground/50 gap-4">
                   <FileJson className="w-16 h-16 opacity-20" />
-                  <p>Fill out the form to generate JSON</p>
+                  <p>Fill in the form to generate JSON</p>
                 </div>
               )}
             </div>
