@@ -58,21 +58,12 @@ export default function SubmitPage() {
     });
   };
 
-  const downloadJson = () => {
-    if (!jsonOutput) return;
-    const blob = new Blob([jsonOutput], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "project.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast({
-      title: "Downloaded project.json",
-      description: "Now upload this file to the GitHub repository.",
-    });
+  const openIssue = () => {
+    // This would be the actual repo URL in production
+    const repoUrl = "https://github.com/organization/repo"; 
+    const title = encodeURIComponent(`Project Submission: ${form.getValues("name")}`);
+    const body = encodeURIComponent(`Please add my project. JSON Payload:\n\n\`\`\`json\n${jsonOutput}\n\`\`\``);
+    window.open(`${repoUrl}/issues/new?title=${title}&body=${body}&labels=submission`, '_blank');
   };
 
   return (
@@ -81,7 +72,7 @@ export default function SubmitPage() {
         <div>
           <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
           <p className="text-muted-foreground mb-4">
-            Generate a project definition file to contribute to the showcase.
+            Generate a project definition to contribute to the showcase.
           </p>
           
           <div className="bg-muted/30 border border-border rounded-md p-4 text-sm space-y-4 mb-6">
@@ -89,17 +80,15 @@ export default function SubmitPage() {
               <h3 className="font-bold text-primary uppercase tracking-wider text-xs mb-2">How it works</h3>
               <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
                 <li>Fill out the form to generate your project metadata</li>
-                <li>Download the <code className="text-primary">project.json</code> file</li>
-                <li>Create a Pull Request in the repository</li>
-                <li>Once merged, the site automatically rebuilds and deploys</li>
+                <li>Click <strong>Submit Issue</strong> to open a new GitHub issue</li>
+                <li>The JSON will be automatically pre-filled (or paste it if needed)</li>
+                <li>Submit the issue - site admins will review and publish it</li>
               </ol>
             </div>
 
-            <div className="bg-black/50 p-3 rounded border border-border/50 text-xs text-muted-foreground font-mono">
-              <p className="mb-2 text-primary font-bold">GITHUB WEB UI TRICK:</p>
-              <p>When adding a file on GitHub, you can create folders by typing:</p>
-              <p className="mt-2 text-white">projects/my-name/my-project/project.json</p>
-              <p className="mt-1 italic opacity-70">Typing the slashes (/) will automatically create the folders for you.</p>
+            <div className="bg-primary/10 p-3 rounded border border-primary/20 text-xs text-muted-foreground">
+              <p className="mb-1 text-primary font-bold">NO CODING REQUIRED</p>
+              <p>You don't need to manage files or Pull Requests. Just submit the data as an issue, and our team handles the rest.</p>
             </div>
           </div>
         </div>
@@ -428,12 +417,12 @@ export default function SubmitPage() {
               <Button 
                 variant="default" 
                 size="sm" 
-                className="h-8 text-xs gap-2 bg-primary text-black hover:bg-primary/90 font-bold"
-                onClick={downloadJson}
+                className="h-8 text-xs gap-2 bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-wider"
+                onClick={openIssue}
                 disabled={!jsonOutput}
               >
-                <FileJson className="w-3 h-3" />
-                Download File
+                <Github className="w-3 h-3" />
+                Submit Issue
               </Button>
             </div>
             <div className="flex-1 p-4 font-mono text-sm overflow-auto custom-scrollbar">
