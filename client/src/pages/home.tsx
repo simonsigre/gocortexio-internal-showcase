@@ -1,11 +1,14 @@
-import { useState, useMemo } from "react";
-import { MOCK_PROJECTS } from "@/lib/mock-data";
+import { useState, useMemo, useEffect } from "react";
+import { Project } from "@/lib/types";
 import { ProjectCard } from "@/components/project-card";
 import { FilterBar } from "@/components/filter-bar";
 import { motion, AnimatePresence } from "framer-motion";
 import { subDays, isAfter, parseISO } from "date-fns";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<{
     product: string | null;
@@ -21,11 +24,24 @@ export default function Home() {
     period: null
   });
 
-  const uniqueAuthors = useMemo(() => Array.from(new Set(MOCK_PROJECTS.map(p => p.author).filter(Boolean))), []);
-  const uniqueUsecases = useMemo(() => Array.from(new Set(MOCK_PROJECTS.map(p => p.usecase).filter(Boolean))), []);
+  useEffect(() => {
+    fetch("./projects.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setProjects(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load projects:", err);
+        setIsLoading(false);
+      });
+  }, []);
+
+  const uniqueAuthors = useMemo(() => Array.from(new Set(projects.map(p => p.author).filter(Boolean))), [projects]);
+  const uniqueUsecases = useMemo(() => Array.from(new Set(projects.map(p => p.usecase).filter(Boolean))), [projects]);
 
   const filteredProjects = useMemo(() => {
-    return MOCK_PROJECTS.filter(project => {
+    return projects.filter(project => {
       // Search filter
       const searchLower = search.toLowerCase();
       const matchesSearch = 
@@ -58,7 +74,16 @@ export default function Home() {
 
       return true;
     });
-  }, [search, filters]);
+  }, [projects, search, filters]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        <p className="text-muted-foreground animate-pulse">Loading project database...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
