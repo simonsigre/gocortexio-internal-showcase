@@ -34,7 +34,7 @@ You can IGNORE/DELETE:
     *   Source: "GitHub Actions".
 4.  **Verify**: The `.github/workflows/deploy.yml` workflow will automatically run on push.
     *   It installs dependencies.
-    *   It builds the React app.
+    *   It builds the React app (using `npx vite build` to bypass server-side scripts).
     *   It deploys the result to GitHub Pages.
 
 ## How to Manage Content
