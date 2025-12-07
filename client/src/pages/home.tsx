@@ -25,15 +25,31 @@ export default function Home() {
   });
 
   useEffect(() => {
-    fetch("./projects.json")
-      .then((res) => res.json())
+    // Use BASE_URL to ensure correct path fetching in both dev and prod (GitHub Pages)
+    const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+      ? import.meta.env.BASE_URL 
+      : `${import.meta.env.BASE_URL}/`;
+      
+    const projectsUrl = `${baseUrl}projects.json`;
+    console.log("Fetching projects from:", projectsUrl);
+
+    fetch(projectsUrl)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
+        console.log("Projects loaded:", data.length);
         setProjects(data);
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load projects:", err);
         setIsLoading(false);
+        // Keep projects empty which triggers "No projects found"
+        // Ideally we should show an error state
       });
   }, []);
 
