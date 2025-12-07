@@ -12,6 +12,7 @@ export const MOCK_PROJECTS: Project[] = [
     theatre: "EMEA",
     usecase: "Simulation",
     githubApi: false,
+    date: "2023-11-15",
     media: {
       type: "image",
       url: "https://images.unsplash.com/photo-1667372393119-c85c020d575c?q=80&w=1000&auto=format&fit=crop",
@@ -30,6 +31,7 @@ export const MOCK_PROJECTS: Project[] = [
     product: "Cortex XSIAM",
     theatre: "Global",
     usecase: "Monitoring",
+    date: new Date().toISOString().split('T')[0], // Today
     media: {
       type: "image",
       url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop",
@@ -77,6 +79,7 @@ export const MOCK_PROJECTS: Project[] = [
     theatre: "Global",
     usecase: "Remediation",
     githubApi: false,
+  },
   {
     name: "Internal Demo Video",
     description: "A comprehensive walkthrough of the new architecture for internal stakeholders. Not a code project, but a resource for architects.",

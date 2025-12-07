@@ -16,6 +16,7 @@ export const projectSchema = z.object({
   author: z.string().min(1, "Author name is required"), // New field
   theatre: z.enum(THEATRES).optional(), // New field
   usecase: z.string().optional(), // New field
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").default(new Date().toISOString().split('T')[0]), // New field for release period filtering
   media: z.object({
     type: z.enum(["image", "youtube"]),
     url: z.string(), // Changed from .url() to allow relative paths like "./thumbnail.png"
@@ -30,5 +31,6 @@ export const DEFAULT_PROJECT: Partial<Project> = {
   githubApi: false,
   language: "Python",
   theatre: "Global",
-  product: "Cortex XSIAM"
+  product: "Cortex XSIAM",
+  date: new Date().toISOString().split('T')[0]
 };

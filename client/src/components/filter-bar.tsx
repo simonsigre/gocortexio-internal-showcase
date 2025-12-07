@@ -13,6 +13,7 @@ interface FilterBarProps {
     theatre: string | null;
     author: string | null;
     usecase: string | null;
+    period: string | null;
   };
   setFilters: (filters: any) => void;
   uniqueAuthors: string[];
@@ -23,7 +24,7 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
   const clearFilters = () => {
-    setFilters({ product: null, theatre: null, author: null, usecase: null });
+    setFilters({ product: null, theatre: null, author: null, usecase: null, period: null });
     setSearch("");
   };
 
@@ -41,6 +42,18 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
         </div>
         
         <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+          <Select value={filters.period || "all"} onValueChange={(v) => setFilters({...filters, period: v === "all" ? null : v})}>
+             <SelectTrigger className="w-[140px] bg-card/50 border-border">
+               <SelectValue placeholder="Period" />
+             </SelectTrigger>
+             <SelectContent>
+               <SelectItem value="all">All Time</SelectItem>
+               <SelectItem value="day">Last 24 Hours</SelectItem>
+               <SelectItem value="week">Last 7 Days</SelectItem>
+               <SelectItem value="month">Last 30 Days</SelectItem>
+             </SelectContent>
+           </Select>
+
           <Select value={filters.product || "all"} onValueChange={(v) => setFilters({...filters, product: v === "all" ? null : v})}>
             <SelectTrigger className="w-[160px] bg-card/50 border-border">
               <SelectValue placeholder="Product" />

@@ -77,6 +77,9 @@ export default function SubmitPage() {
               │       ├── <span className="text-white">project.json</span>   (Paste generated JSON here)<br/>
               │       └── <span className="text-white">thumbnail.png</span>  (Optional image)<br/>
             </div>
+            <p className="text-[10px] text-muted-foreground italic mt-2 border-t border-border/30 pt-2">
+              * A date field will be automatically added to your JSON payload with today's date ({new Date().toISOString().split('T')[0]})
+            </p>
           </div>
         </div>
 

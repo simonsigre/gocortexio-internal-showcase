@@ -3,6 +3,7 @@ import { MOCK_PROJECTS } from "@/lib/mock-data";
 import { ProjectCard } from "@/components/project-card";
 import { FilterBar } from "@/components/filter-bar";
 import { motion, AnimatePresence } from "framer-motion";
+import { subDays, isAfter, parseISO } from "date-fns";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -11,11 +12,13 @@ export default function Home() {
     theatre: string | null;
     author: string | null;
     usecase: string | null;
+    period: string | null;
   }>({
     product: null,
     theatre: null,
     author: null,
-    usecase: null
+    usecase: null,
+    period: null
   });
 
   const uniqueAuthors = useMemo(() => Array.from(new Set(MOCK_PROJECTS.map(p => p.author).filter(Boolean))), []);
@@ -38,6 +41,20 @@ export default function Home() {
       if (filters.theatre && project.theatre !== filters.theatre) return false;
       if (filters.author && project.author !== filters.author) return false;
       if (filters.usecase && project.usecase !== filters.usecase) return false;
+
+      // Period filter (using date added to the project)
+      if (filters.period) {
+         const today = new Date();
+         // Default to today if no date exists on the project (for legacy data)
+         const projectDate = project.date ? parseISO(project.date) : parseISO("2020-01-01");
+         
+         let cutoffDate;
+         if (filters.period === "day") cutoffDate = subDays(today, 1);
+         else if (filters.period === "week") cutoffDate = subDays(today, 7);
+         else if (filters.period === "month") cutoffDate = subDays(today, 30);
+         
+         if (cutoffDate && !isAfter(projectDate, cutoffDate)) return false;
+      }
 
       return true;
     });
