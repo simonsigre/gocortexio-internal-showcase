@@ -56,11 +56,12 @@ To host this in your own GitHub repository, you only need to copy the following 
 *   `package-lock.json` - Locks exact versions (Critical for stable builds).
 *   `tsconfig.json` - TypeScript configuration.
 *   `vite.config.ts` - Build tool configuration.
-*   `vite-plugin-meta-images.ts` - Custom plugin for social images (Critical: vite.config.ts will fail without this).
+*   `vite-plugin-meta-images.ts` - Custom plugin for social images (Critical).
 *   `tailwind.config.ts` (if present) or `client/src/index.css` (Tailwind setup).
 
 ### 2. Source Code
 *   `client/` - The entire folder. Contains all source code, pages, components, and the `projects.json` database.
+*   `script/` - **NEW**: Contains `enrich.ts` (API fetcher) and `validate.ts` (Nanny/Link check).
 
 ### 3. Automation
 *   `.github/workflows/deploy.yml` - The deployment script.
