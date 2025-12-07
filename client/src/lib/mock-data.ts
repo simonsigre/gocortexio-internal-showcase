@@ -50,6 +50,7 @@ export const MOCK_PROJECTS: Project[] = [
     product: "Cortex XDR",
     theatre: "NAM",
     usecase: "Testing",
+    date: "2024-01-20",
     media: {
       type: "youtube",
       url: "dQw4w9WgXcQ", // Rick roll as placeholder from example
@@ -66,6 +67,7 @@ export const MOCK_PROJECTS: Project[] = [
     product: "Cortex XSOAR",
     theatre: "JAPAC",
     usecase: "Development",
+    date: "2023-12-05",
     githubApi: false,
   },
   {
@@ -78,6 +80,7 @@ export const MOCK_PROJECTS: Project[] = [
     product: "Prisma Cloud",
     theatre: "Global",
     usecase: "Remediation",
+    date: "2022-08-14",
     githubApi: false,
   },
   {
@@ -91,6 +94,7 @@ export const MOCK_PROJECTS: Project[] = [
     theatre: "Global",
     usecase: "Enablement",
     githubApi: false,
+    date: "2024-02-01",
     media: {
       type: "image",
       url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop",
