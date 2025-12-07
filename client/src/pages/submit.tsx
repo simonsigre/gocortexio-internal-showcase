@@ -49,6 +49,15 @@ export default function SubmitPage() {
     });
   };
 
+  const onError = (errors: any) => {
+    const missingFields = Object.keys(errors);
+    toast({
+      variant: "destructive",
+      title: "Missing Required Fields",
+      description: `Please fill in: ${missingFields.join(", ")}`,
+    });
+  };
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(jsonOutput);
     setCopied(true);
@@ -96,7 +105,7 @@ export default function SubmitPage() {
         <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
           <CardContent className="pt-6">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
@@ -104,7 +113,7 @@ export default function SubmitPage() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Name</FormLabel>
+                        <FormLabel>Project Name <span className="text-red-500">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="e.g. XDRTop" {...field} />
                         </FormControl>
@@ -118,7 +127,7 @@ export default function SubmitPage() {
                     name="author"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Author</FormLabel>
+                        <FormLabel>Author <span className="text-red-500">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Your Name or Team" {...field} />
                         </FormControl>
@@ -177,7 +186,7 @@ export default function SubmitPage() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Description <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Textarea 
                           placeholder="Describe your project..." 
@@ -196,7 +205,7 @@ export default function SubmitPage() {
                     name="status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
+                        <FormLabel>Status <span className="text-red-500">*</span></FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
@@ -217,7 +226,7 @@ export default function SubmitPage() {
                     name="language"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Primary Language</FormLabel>
+                        <FormLabel>Primary Language <span className="text-red-500">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="e.g. Python" {...field} />
                         </FormControl>
@@ -233,7 +242,7 @@ export default function SubmitPage() {
                     name="link"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Link (URL)</FormLabel>
+                        <FormLabel>Project Link (URL) <span className="text-red-500">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="https://..." {...field} />
                         </FormControl>
