@@ -27,12 +27,12 @@ jobs:
         run: npm ci
 
       - name: Validate & Secure
-        run: npx tsx script/validate.ts
+        run: npx tsx scripts/validate.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enrich Data
-        run: npx tsx script/enrich.ts
+        run: npx tsx scripts/enrich.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
