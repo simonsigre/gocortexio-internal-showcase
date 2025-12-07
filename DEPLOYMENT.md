@@ -14,6 +14,7 @@ When moving this to your corporate GitHub repository, you only need the followin
 │       └── deploy.yml    <-- The automation to build/deploy the site
 ├── client/               <-- The frontend source code
 ├── package.json          <-- Dependencies
+├── package-lock.json     <-- Exact versions (CRITICAL for deployment)
 ├── tsconfig.json         <-- TypeScript config
 ├── vite.config.ts        <-- Build config
 └── client/src/index.css  <-- Styling config (Tailwind v4 embedded)
