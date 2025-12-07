@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon } from "lucide-react";
+import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon, Star, GitFork, Scale } from "lucide-react";
 import { motion } from "framer-motion";
 
 const STATUS_COLOURS = {
@@ -85,7 +85,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <h3 className="text-lg font-bold font-mono uppercase tracking-tight text-foreground group-hover:text-primary transition-colors">
                 {project.name}
               </h3>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex flex-wrap items-center gap-2 mt-1">
                 <span className="text-xs text-muted-foreground font-mono">
                   {project.product}
                 </span>
@@ -107,6 +107,30 @@ export function ProjectCard({ project }: { project: Project }) {
               {project.status}
             </Badge>
           </div>
+
+          {/* Stats Bar */}
+          {project.githubApi && (project.stars !== undefined || project.forks !== undefined) && (
+            <div className="flex items-center gap-4 mb-3 pb-3 border-b border-border/40">
+              {project.stars !== undefined && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground" title="GitHub Stars">
+                  <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500/20" />
+                  <span className="font-mono">{project.stars}</span>
+                </div>
+              )}
+              {project.forks !== undefined && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground" title="GitHub Forks">
+                  <GitFork className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="font-mono">{project.forks}</span>
+                </div>
+              )}
+              {project.license && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground" title="License">
+                  <Scale className="w-3.5 h-3.5" />
+                  <span className="font-mono">{project.license}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex-1">
             <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
@@ -140,7 +164,7 @@ export function ProjectCard({ project }: { project: Project }) {
                   style={{ backgroundColor: LANGUAGE_COLOURS[project.language] || LANGUAGE_COLOURS.Default }}
                 />
                 <span className="text-xs font-mono text-muted-foreground">{project.language}</span>
-                {project.githubApi && project.repo && (
+                {project.githubApi && project.repo && !project.stars && (
                   <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground ml-2">
                     API Enabled
                   </span>

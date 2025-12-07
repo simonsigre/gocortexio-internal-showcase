@@ -17,6 +17,11 @@ export const projectSchema = z.object({
   theatre: z.enum(THEATRES).optional(), // New field
   usecase: z.string().optional(), // New field
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").default(new Date().toISOString().split('T')[0]), // New field for release period filtering
+  // Enriched Data Fields (populated by build script)
+  stars: z.number().optional(),
+  forks: z.number().optional(),
+  lastUpdated: z.string().optional(),
+  license: z.string().optional(),
   media: z.object({
     type: z.enum(["image", "youtube"]),
     url: z.string(), // Changed from .url() to allow relative paths like "./thumbnail.png"
