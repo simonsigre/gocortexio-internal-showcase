@@ -16,7 +16,7 @@ When moving this to your corporate GitHub repository, you only need the followin
 ├── package.json          <-- Dependencies
 ├── tsconfig.json         <-- TypeScript config
 ├── vite.config.ts        <-- Build config
-└── tailwind.config.ts    <-- Styling config
+└── client/src/index.css  <-- Styling config (Tailwind v4 embedded)
 ```
 
 You can IGNORE/DELETE:
