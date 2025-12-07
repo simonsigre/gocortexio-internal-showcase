@@ -51,5 +51,22 @@ You can IGNORE/DELETE:
 8.  Update `client/src/lib/mock-data.ts` (or your external JSON file) in the repo and commit.
 9.  The site will auto-rebuild.
 
-### User Submissions
-Users can click "Submit Issue" on the submission page to send you the JSON payload directly via GitHub Issues.
+## Troubleshooting
+
+### Site is Blank (White Screen)
+If the site loads but is completely blank:
+1.  **Check Console**: Open Developer Tools (F12) -> Console. Look for Red errors.
+    *   If you see `404 Not Found` for `main.js` or `index.css`: The **Base Path** is likely wrong.
+    *   Ensure you are using the command `npx vite build --base /YOUR-REPO-NAME/` in your workflow.
+2.  **Check Network Tab**: See if `main.js` is failing to load.
+3.  **Verify Files**: Ensure `vite-plugin-meta-images.ts` was copied to your repo root.
+4.  **Verify Workflow**: Ensure `.github/workflows/deploy.yml` matches the one in this guide.
+
+### Routing Issues (404 on Refresh)
+This site uses **Hash Routing** (e.g. `/#/submit`) to work on GitHub Pages.
+*   If you see regular URLs like `/submit` (without `#`), routing will fail on refresh.
+*   The app is configured to use `useHashLocation` automatically.
+
+### "Vite" command not found
+Ensure `package.json` and `package-lock.json` are in the root of your repo.
+
