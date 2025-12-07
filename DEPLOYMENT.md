@@ -41,8 +41,8 @@ Every time code is pushed to the `main` branch, this automation runs:
 
 1.  Checkout: It downloads the latest code.
 2.  Install: Runs `npm ci` to install dependencies defined in `package.json`.
-3.  Validate & Secure: Runs `script/validate.ts` to ensure no offensive terms are present and all linked repositories are accessible. Fails the build if issues are found.
-4.  Enrich Data: Runs `script/enrich.ts` to fetch live statistics (Stars, Forks, Licence) from the GitHub API and update the project data.
+3.  Validate & Secure: Runs `scripts/validate.ts` to ensure no offensive terms are present and all linked repositories are accessible. Fails the build if issues are found.
+4.  Enrich Data: Runs `scripts/enrich.ts` to fetch live statistics (Stars, Forks, Licence) from the GitHub API and update the project data.
 5.  Build: Runs `npx vite build`.
     *   Critical: It appends `--base /YOUR-REPO-NAME/` to ensure assets load correctly from a subpath (e.g., `github.com/org/repo/assets/...`).
 6.  Deploy: It uploads the resulting `dist/` folder to GitHub Pages.
@@ -63,7 +63,7 @@ To host this in your own GitHub repository, you only need to copy the following 
 
 ### 2. Source Code
 *   `client/` - The entire folder. Contains all source code, pages, components, and the `projects.json` database.
-*   `script/` - NEW: Contains `enrich.ts` (API fetcher) and `validate.ts` (Nanny/Link check).
+*   `scripts/` - NEW: Contains `enrich.ts` (API fetcher) and `validate.ts` (Nanny/Link check).
 
 ### 3. Automation
 *   `.github/workflows/deploy.yml` - The deployment script.
@@ -72,7 +72,7 @@ To host this in your own GitHub repository, you only need to copy the following 
 You do NOT need these folders for the static site:
 *   `server/` - Backend code (unused).
 *   `shared/` - Backend shared schemas (unused).
-*   `scripts/` - Backend build scripts (unused).
+*   `script/` - Backend build scripts (unused).
 
 ---
 
