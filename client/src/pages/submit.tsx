@@ -8,13 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Copy, Check, FileJson, Github } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 export default function SubmitPage() {
   const [jsonOutput, setJsonOutput] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const form = useForm<Project>({
@@ -43,9 +45,10 @@ export default function SubmitPage() {
     
     const json = JSON.stringify(cleanData, null, 2);
     setJsonOutput(json);
+    setIsDialogOpen(true);
     toast({
       title: "JSON Generated",
-      description: "Copy the JSON below and submit a PR to the repository.",
+      description: "Review your project submission below.",
     });
   };
 
@@ -76,339 +79,270 @@ export default function SubmitPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
-          <p className="text-muted-foreground mb-4">
-            Generate a project definition to contribute to the showcase.
-          </p>
-          
-          <div className="bg-muted/30 border border-border rounded-md p-4 text-sm space-y-4 mb-6">
-            <div>
-              <h3 className="font-bold text-primary uppercase tracking-wider text-xs mb-2">How it works</h3>
-              <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
-                <li>Fill out the form to generate your project metadata</li>
-                <li>Click <strong>Submit Issue</strong> to open a new GitHub issue</li>
-                <li>The JSON will be automatically pre-filled (or paste it if needed)</li>
-                <li>Submit the issue - site admins will review and publish it</li>
-              </ol>
-            </div>
-
-            <div className="bg-primary/10 p-3 rounded border border-primary/20 text-xs text-muted-foreground">
-              <p className="mb-1 text-primary font-bold">NO CODING REQUIRED</p>
-              <p>You don't need to manage files or Pull Requests. Just submit the data as an issue, and our team handles the rest.</p>
-            </div>
-          </div>
-        </div>
-
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardContent className="pt-6">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Project Name <span className="text-red-500">*</span></FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. XDRTop" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="author"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Author <span className="text-red-500">*</span></FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your Name or Team" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="product"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select product" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {PRODUCTS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="theatre"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Theatre</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select theatre" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {THEATRES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
+    <div className="max-w-6xl mx-auto space-y-6">
+      <div className="text-center">
+        <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Generate a project definition to contribute to the showcase. No coding required.
+        </p>
+      </div>
+      
+      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
+              
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="name"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description <span className="text-red-500">*</span></FormLabel>
+                    <FormItem className="col-span-1">
+                      <FormLabel>Project Name <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Describe your project..." 
-                          className="min-h-[100px]"
-                          {...field} 
-                        />
+                        <Input placeholder="e.g. XDRTop" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Status <span className="text-red-500">*</span></FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {PROJECT_STATUS.map(s => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="language"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Primary Language <span className="text-red-500">*</span></FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. Python" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="link"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Project Link (URL) <span className="text-red-500">*</span></FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="usecase"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Use Case (Tag)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. Automation" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="space-y-4 border rounded-md p-4 bg-muted/20">
-                   <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground">GitHub Integration</h3>
-                   
-                   <FormField
-                    control={form.control}
-                    name="githubApi"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                          <FormLabel>Fetch Live Data</FormLabel>
-                          <FormDescription>
-                            Get latest release & languages from GitHub API
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  {form.watch("githubApi") && (
-                    <FormField
-                      control={form.control}
-                      name="repo"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Repository (owner/repo)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="gocortexio/xdrtop" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <FormField
+                  control={form.control}
+                  name="author"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Author <span className="text-red-500">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="Name/Team" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
 
-                <div className="space-y-4 border rounded-md p-4 bg-muted/20">
-                   <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground">Media (Optional)</h3>
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
+                <FormField
+                  control={form.control}
+                  name="product"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Product</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {PRODUCTS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="theatre"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Theatre</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {THEATRES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Status <span className="text-red-500">*</span></FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {PROJECT_STATUS.map(s => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="language"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Language <span className="text-red-500">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Python" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="link"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Link (URL) <span className="text-red-500">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="usecase"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Use Case</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Automation" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Describe your project (min 10 chars)..." 
+                        className="h-20"
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div className="border rounded-md p-4 bg-muted/20">
+                    <h3 className="font-bold text-xs uppercase tracking-wider text-muted-foreground mb-3">GitHub API</h3>
+                    <div className="flex gap-4 items-start">
+                        <FormField
+                        control={form.control}
+                        name="githubApi"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-center gap-2 space-y-0">
+                                <FormControl>
+                                    <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormLabel className="font-normal text-xs">Fetch Live Data</FormLabel>
+                            </FormItem>
+                        )}
+                        />
+
+                        {form.watch("githubApi") && (
+                        <FormField
+                            control={form.control}
+                            name="repo"
+                            render={({ field }) => (
+                            <FormItem className="flex-1 space-y-0">
+                                <FormControl>
+                                <Input className="h-8 text-xs" placeholder="owner/repo" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        )}
+                    </div>
+                 </div>
+
+                 <div className="border rounded-md p-4 bg-muted/20">
+                    <h3 className="font-bold text-xs uppercase tracking-wider text-muted-foreground mb-3">Media (Optional)</h3>
+                    <div className="flex gap-2">
+                        <FormField
                         control={form.control}
                         name="media.type"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Type</FormLabel>
-                            <Select 
-                              onValueChange={(val) => {
-                                field.onChange(val);
-                                // Auto-fill URL for local image
-                                if (val === "image" && form.getValues("media.url") === "") {
-                                   // We don't auto-fill here to avoid confusion if they paste a URL
-                                }
-                              }} 
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="image">Image (URL or Local)</SelectItem>
-                                <SelectItem value="youtube">YouTube Video ID</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
+                            <FormItem className="w-24 space-y-0">
+                                <Select 
+                                    onValueChange={field.onChange} 
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                    <SelectTrigger className="h-8 text-xs">
+                                        <SelectValue placeholder="Type" />
+                                    </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                    <SelectItem value="image">Image</SelectItem>
+                                    <SelectItem value="youtube">Video</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </FormItem>
                         )}
-                      />
-                      <FormField
+                        />
+                        <FormField
                         control={form.control}
                         name="media.url"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>URL / ID / Path</FormLabel>
-                            <FormControl>
-                              <div className="flex gap-2">
-                                <Input placeholder={form.watch("media.type") === "youtube" ? "dQw4w9WgXcQ" : "https://... or ./thumbnail.png"} {...field} />
-                                {form.watch("media.type") === "image" && (
-                                  <Button 
-                                    type="button" 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => form.setValue("media.url", "./thumbnail.png")}
-                                    className="whitespace-nowrap font-mono text-xs"
-                                  >
-                                    Use Local
-                                  </Button>
-                                )}
-                              </div>
-                            </FormControl>
-                            <FormDescription className="text-[10px]">
-                              For local files, use <code>./thumbnail.png</code> and upload the file with your PR.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
+                            <FormItem className="flex-1 space-y-0">
+                                <FormControl>
+                                <Input className="h-8 text-xs" placeholder="URL or ./thumb.png" {...field} />
+                                </FormControl>
+                            </FormItem>
                         )}
-                      />
-                   </div>
-                   <FormField
-                        control={form.control}
-                        name="media.alt"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Alt Text</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Description for accessibility" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                </div>
+                        />
+                    </div>
+                 </div>
+              </div>
 
-                <Button type="submit" size="lg" className="w-full bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-wider">
-                  Generate JSON Payload
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
+              <Button type="submit" size="lg" className="w-full bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-wider">
+                Generate JSON Payload
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
 
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-xl font-display font-bold uppercase tracking-wider mb-2">JSON Output</h2>
-          <p className="text-muted-foreground text-sm">
-            This is the file content you need to submit.
-          </p>
-        </div>
-
-        <div className="relative group">
-          <div className={cn(
-            "absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200",
-            !jsonOutput && "hidden"
-          )}></div>
-          <div className="relative bg-white border border-border rounded-lg min-h-[500px] flex flex-col">
-            <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/10">
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Project JSON Generated</DialogTitle>
+            <DialogDescription>
+              Review the generated JSON payload below.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex-1 min-h-[300px] border border-border rounded-lg bg-white overflow-hidden flex flex-col">
+             <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/10">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <FileJson className="w-4 h-4" />
                 <span className="text-xs font-mono">project.json</span>
@@ -418,37 +352,33 @@ export default function SubmitPage() {
                 size="sm" 
                 className="h-8 text-xs gap-2 hover:bg-primary/20 hover:text-primary"
                 onClick={copyToClipboard}
-                disabled={!jsonOutput}
               >
                 {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                 {copied ? "Copied" : "Copy JSON"}
               </Button>
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="h-8 text-xs gap-2 bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-wider"
-                onClick={openIssue}
-                disabled={!jsonOutput}
-              >
-                <Github className="w-3 h-3" />
-                Submit Issue
-              </Button>
             </div>
             <div className="flex-1 p-4 font-mono text-sm overflow-auto custom-scrollbar">
-              {jsonOutput ? (
                 <pre className="text-black whitespace-pre-wrap break-all">
                   {jsonOutput}
                 </pre>
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center text-muted-foreground/50 gap-4">
-                  <FileJson className="w-16 h-16 opacity-20" />
-                  <p>Fill in the form to generate JSON</p>
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      </div>
+
+          <DialogFooter className="sm:justify-between gap-4 mt-4">
+             <div className="text-xs text-muted-foreground flex items-center">
+                1. Copy JSON &nbsp;&rarr;&nbsp; 2. Click Submit Issue &nbsp;&rarr;&nbsp; 3. Paste into GitHub Issue
+             </div>
+             <Button 
+                variant="default" 
+                className="bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-wider"
+                onClick={openIssue}
+              >
+                <Github className="w-4 h-4 mr-2" />
+                Submit to GitHub
+              </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
