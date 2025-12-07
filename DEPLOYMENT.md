@@ -1,71 +1,83 @@
 # Deployment Guide
 
-This project is designed to be hosted entirely on GitHub Pages as a static site.
-It requires NO backend server. All data is managed via the `client/src/lib/mock-data.ts` (or `projects.json` if you externalize it) file.
+This guide explains how to deploy the **GoCortex.io Internal Showcase** to GitHub Pages and details how the application functions end-to-end.
 
-## Folder Structure to Copy
+## End-to-End Architecture
 
-When moving this to your corporate GitHub repository, you only need the following files/folders:
+This application is a **Static Single Page Application (SPA)** built with React and Vite. It is designed to run entirely in the user's browser with **no backend server**.
 
-```text
-/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml    <-- The automation to build/deploy the site
-├── client/               <-- The frontend source code
-├── package.json          <-- Dependencies
-├── package-lock.json     <-- Exact versions (CRITICAL for deployment)
-├── tsconfig.json         <-- TypeScript config
-├── vite.config.ts        <-- Build config
-└── client/src/index.css  <-- Styling config (Tailwind v4 embedded)
-```
+### How it Works
 
-You can IGNORE/DELETE:
-- `server/` (Not used for the static site)
-- `shared/` (Not used)
-- `scripts/` (Not used)
+1.  **Static Hosting**:
+    *   The build process compiles all React code, styles, and assets into static HTML, JavaScript, and CSS files.
+    *   These files are hosted on GitHub Pages, which acts as a simple file server.
+    *   When a user visits the site, their browser downloads the `index.html` and the bundled JavaScript.
+
+2.  **Client-Side Routing**:
+    *   The app uses `wouter` with **Hash Routing** (e.g., `/#/submit`).
+    *   This is crucial for static hosting because GitHub Pages doesn't know how to handle dynamic URLs like `/submit`.
+    *   The hash (`#`) keeps the routing logic entirely within the browser, ensuring refreshing the page works correctly without 404 errors.
+
+3.  **Data Management (The "Database")**:
+    *   There is no traditional database server.
+    *   All project data is stored in a static file: `client/public/projects.json`.
+    *   When the application loads, the browser makes a standard HTTP `GET` request to fetch this JSON file.
+    *   The app then parses this data and renders the project cards, filters, and search results purely on the client side.
+
+4.  **Submission Workflow**:
+    *   Since there is no backend to accept form submissions, the "Submit" page generates a JSON payload.
+    *   The user is directed to open a GitHub Issue with this JSON.
+    *   **Admins** then use the Admin page to paste this JSON, which merges it into the master list.
+    *   The admin commits the updated `projects.json` to the repo, triggering a new build.
+
+---
+
+## Deployment Automation
+
+The deployment is handled automatically by **GitHub Actions**.
+
+### The Workflow (`.github/workflows/deploy.yml`)
+Every time code is pushed to the `main` branch, this automation runs:
+
+1.  **Checkout**: It downloads the latest code.
+2.  **Install**: Runs `npm ci` to install dependencies defined in `package.json`.
+3.  **Build**: Runs `npx vite build`.
+    *   **Critical**: It appends `--base /YOUR-REPO-NAME/` to ensure assets load correctly from a subpath (e.g., `github.com/org/repo/assets/...`).
+4.  **Deploy**: It uploads the resulting `dist/` folder to GitHub Pages.
+
+---
+
+## Files to Copy
+
+To host this in your own GitHub repository, you only need to copy the following files and folders. You can ignore everything else.
+
+### 1. Essential Configuration
+*   `package.json` - Defines project dependencies.
+*   `package-lock.json` - Locks exact versions (Critical for stable builds).
+*   `tsconfig.json` - TypeScript configuration.
+*   `vite.config.ts` - Build tool configuration.
+*   `tailwind.config.ts` (if present) or `client/src/index.css` (Tailwind setup).
+
+### 2. Source Code
+*   `client/` - The entire folder. Contains all source code, pages, components, and the `projects.json` database.
+
+### 3. Automation
+*   `.github/workflows/deploy.yml` - The deployment script.
+
+### 4. What to Ignore/Delete
+You do **NOT** need these folders for the static site:
+*   `server/` - Backend code (unused).
+*   `shared/` - Backend shared schemas (unused).
+*   `scripts/` - Backend build scripts (unused).
+
+---
 
 ## Setup Instructions
 
-1.  **Create Repository**: Create a new repository on GitHub.
+1.  **Create Repository**: Create a new empty repository on GitHub.
 2.  **Push Code**: Copy the files listed above and push them to the `main` branch.
 3.  **Enable Pages**:
-    *   Go to Repository Settings -> Pages.
-    *   Source: "GitHub Actions".
-4.  **Verify**: The `.github/workflows/deploy.yml` workflow will automatically run on push.
-    *   It installs dependencies.
-    *   It builds the React app (using `npx vite build` to bypass server-side scripts).
-    *   It deploys the result to GitHub Pages.
-
-## How to Manage Content
-
-### Adding Projects (Admins)
-1.  Go to the live site and click **Submit Project**.
-2.  Fill out the form to generate the JSON.
-3.  Go to the **Admin** page.
-4.  Paste your existing list (from your code or file).
-5.  Paste the new project JSON.
-6.  Click **Merge**.
-7.  Copy the updated JSON.
-8.  Update `client/src/lib/mock-data.ts` (or your external JSON file) in the repo and commit.
-9.  The site will auto-rebuild.
-
-## Troubleshooting
-
-### Site is Blank (White Screen)
-If the site loads but is completely blank:
-1.  **Check Console**: Open Developer Tools (F12) -> Console. Look for Red errors.
-    *   If you see `404 Not Found` for `main.js` or `index.css`: The **Base Path** is likely wrong.
-    *   Ensure you are using the command `npx vite build --base /YOUR-REPO-NAME/` in your workflow.
-2.  **Check Network Tab**: See if `main.js` is failing to load.
-3.  **Verify Files**: Ensure `vite-plugin-meta-images.ts` was copied to your repo root.
-4.  **Verify Workflow**: Ensure `.github/workflows/deploy.yml` matches the one in this guide.
-
-### Routing Issues (404 on Refresh)
-This site uses **Hash Routing** (e.g. `/#/submit`) to work on GitHub Pages.
-*   If you see regular URLs like `/submit` (without `#`), routing will fail on refresh.
-*   The app is configured to use `useHashLocation` automatically.
-
-### "Vite" command not found
-Ensure `package.json` and `package-lock.json` are in the root of your repo.
-
+    *   Go to Repository **Settings** -> **Pages**.
+    *   Under **Build and deployment**, select **Source** as **GitHub Actions**.
+    *   (Do not select "Deploy from a branch", let the Action handle it).
+4.  **Verify**: Click the **Actions** tab in your repo to see the deployment running. Once green, your site is live!
