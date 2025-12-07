@@ -83,7 +83,7 @@ export default function SubmitPage() {
       <div className="text-center">
         <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Generate a project definition to contribute to the showcase. No coding required.
+          Create a project submission for the showcase.
         </p>
       </div>
       
