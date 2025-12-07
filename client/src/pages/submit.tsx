@@ -63,10 +63,21 @@ export default function SubmitPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Submit Project</h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mb-4">
             Fill in the details below to generate the JSON payload for your project.
-            Once generated, create a new file in the <code className="bg-muted px-1 py-0.5 rounded text-primary">projects/</code> directory of the repo.
           </p>
+          
+          <div className="bg-muted/30 border border-border rounded-md p-4 text-sm space-y-2 mb-6 font-mono">
+            <p className="font-bold text-primary">FILE STRUCTURE GUIDE:</p>
+            <p>To avoid file name collisions, please create a unique folder structure:</p>
+            <div className="bg-black/50 p-3 rounded border border-border/50 text-xs text-muted-foreground">
+              projects/<br/>
+              ├── <span className="text-blue-400">your-username</span>/<br/>
+              │   └── <span className="text-green-400">project-slug</span>/<br/>
+              │       ├── <span className="text-white">project.json</span>   (Paste generated JSON here)<br/>
+              │       └── <span className="text-white">thumbnail.png</span>  (Optional image)<br/>
+            </div>
+          </div>
         </div>
 
         <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
@@ -283,14 +294,23 @@ export default function SubmitPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select 
+                              onValueChange={(val) => {
+                                field.onChange(val);
+                                // Auto-fill URL for local image
+                                if (val === "image" && form.getValues("media.url") === "") {
+                                   // We don't auto-fill here to avoid confusion if they paste a URL
+                                }
+                              }} 
+                              defaultValue={field.value}
+                            >
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select type" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="image">Image URL</SelectItem>
+                                <SelectItem value="image">Image (URL or Local)</SelectItem>
                                 <SelectItem value="youtube">YouTube Video ID</SelectItem>
                               </SelectContent>
                             </Select>
@@ -303,10 +323,26 @@ export default function SubmitPage() {
                         name="media.url"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>URL / ID</FormLabel>
+                            <FormLabel>URL / ID / Path</FormLabel>
                             <FormControl>
-                              <Input placeholder={form.watch("media.type") === "youtube" ? "dQw4w9WgXcQ" : "https://example.com/image.png"} {...field} />
+                              <div className="flex gap-2">
+                                <Input placeholder={form.watch("media.type") === "youtube" ? "dQw4w9WgXcQ" : "https://... or ./thumbnail.png"} {...field} />
+                                {form.watch("media.type") === "image" && (
+                                  <Button 
+                                    type="button" 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => form.setValue("media.url", "./thumbnail.png")}
+                                    className="whitespace-nowrap font-mono text-xs"
+                                  >
+                                    Use Local
+                                  </Button>
+                                )}
+                              </div>
                             </FormControl>
+                            <FormDescription className="text-[10px]">
+                              For local files, use <code>./thumbnail.png</code> and upload the file with your PR.
+                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}

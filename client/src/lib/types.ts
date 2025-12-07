@@ -18,7 +18,7 @@ export const projectSchema = z.object({
   usecase: z.string().optional(), // New field
   media: z.object({
     type: z.enum(["image", "youtube"]),
-    url: z.string().url(),
+    url: z.string(), // Changed from .url() to allow relative paths like "./thumbnail.png"
     alt: z.string()
   }).optional()
 });

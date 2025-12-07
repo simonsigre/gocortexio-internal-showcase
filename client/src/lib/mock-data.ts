@@ -77,5 +77,21 @@ export const MOCK_PROJECTS: Project[] = [
     theatre: "Global",
     usecase: "Remediation",
     githubApi: false,
+  {
+    name: "Internal Demo Video",
+    description: "A comprehensive walkthrough of the new architecture for internal stakeholders. Not a code project, but a resource for architects.",
+    status: "active",
+    link: "https://drive.google.com/file/d/example-id/view",
+    language: "Video", // Or "Resource"
+    author: "Architecture Team",
+    product: "Strata",
+    theatre: "Global",
+    usecase: "Enablement",
+    githubApi: false,
+    media: {
+      type: "image",
+      url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop",
+      alt: "Architecture diagram"
+    }
   }
 ];
