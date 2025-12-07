@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npx vite build
         env:
           # Ensure base path is correct for GitHub Pages
           # If your repo is https://org.github.io/repo-name/, set this to /repo-name/
