@@ -16,7 +16,7 @@ export const MOCK_PROJECTS: Project[] = [
     media: {
       type: "image",
       url: "https://images.unsplash.com/photo-1667372393119-c85c020d575c?q=80&w=1000&auto=format&fit=crop",
-      alt: "Container visualization"
+      alt: "Container visualisation"
     }
   },
   {
