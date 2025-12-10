@@ -1,0 +1,96 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: cortex-arsenal-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cortex_arsenal
+      POSTGRES_USER: arsenal_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dev_password_change_in_prod}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arsenal_user -d cortex_arsenal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - arsenal-network
+
+  # Backend API Service
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: cortex-arsenal-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://arsenal_user:${DB_PASSWORD:-dev_password_change_in_prod}@postgres:5432/cortex_arsenal
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET:-dev_secret_change_in_prod}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - uploaded_files:/app/uploads
+    networks:
+      - arsenal-network
+
+  # Frontend (Vite Dev Server)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: cortex-arsenal-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:3001
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app/client
+      - /app/client/node_modules
+    networks:
+      - arsenal-network
+    command: npm run dev
+
+  # pgAdmin (Optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cortex-arsenal-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@cortex-arsenal.local
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - arsenal-network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
+  uploaded_files:
+    driver: local
+
+networks:
+  arsenal-network:
+    driver: bridge

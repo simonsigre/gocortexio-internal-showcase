@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { Project } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon, Star, GitFork, Scale } from "lucide-react";
+import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon, Star, GitFork, Scale, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 
 const STATUS_COLOURS = {
@@ -34,6 +35,18 @@ const LANGUAGE_COLOURS: Record<string, string> = {
   Default: "#888888",
 };
 
+// Helper function to get product-specific colors (PANW branding)
+function getProductColor(product: string): string {
+  const colorMap: Record<string, string> = {
+    'Cortex XSIAM': 'bg-[#00cd67]/20 text-[#00cd67] border-[#00cd67]/30', // Green
+    'Cortex XDR': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30', // Cyan
+    'Cortex XSOAR': 'bg-purple-500/20 text-purple-400 border-purple-500/30', // Purple
+    'Prisma Cloud': 'bg-blue-500/20 text-blue-400 border-blue-500/30', // Blue
+    'Strata': 'bg-orange-500/20 text-orange-400 border-orange-500/30', // Orange
+  };
+  return colorMap[product] || 'bg-secondary';
+}
+
 export function ProjectCard({ project }: { project: Project }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const statusClass = STATUS_COLOURS[project.status as keyof typeof STATUS_COLOURS] || STATUS_COLOURS.development;
@@ -49,31 +62,60 @@ export function ProjectCard({ project }: { project: Project }) {
         <div className="w-full md:w-[280px] h-[200px] md:h-auto bg-black/20 shrink-0 border-b md:border-b-0 md:border-r border-border relative overflow-hidden group-hover:border-primary/50 transition-colors">
           {project.media ? (
             project.media.type === "youtube" ? (
-               <div className="w-full h-full flex items-center justify-center bg-black relative group/media cursor-pointer">
-                  <img 
-                    src={`https://img.youtube.com/vi/${project.media.url}/0.jpg`} 
-                    alt={project.media.alt}
-                    className="w-full h-full object-cover opacity-70 group-hover/media:opacity-90 transition-opacity"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover/media:scale-110 transition-transform">
-                      <Play className="fill-white text-white ml-1" />
-                    </div>
+              <div className="w-full h-full flex items-center justify-center bg-black relative group/media cursor-pointer">
+                <img
+                  src={`https://img.youtube.com/vi/${project.media.url}/0.jpg`}
+                  alt={project.media.alt}
+                  className="w-full h-full object-cover opacity-70 group-hover/media:opacity-90 transition-opacity"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover/media:scale-110 transition-transform">
+                    <Play className="fill-white text-white ml-1" />
                   </div>
-               </div>
+                </div>
+              </div>
             ) : (
-              <img 
-                src={project.media.url} 
-                alt={project.media.alt} 
+              <img
+                src={project.media.url}
+                alt={project.media.alt}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             )
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-accent/5">
-              <div className="w-20 h-20 border-2 border-primary/30 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                <ImageIcon className="w-10 h-10 text-primary/50" />
+            <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden">
+              {/* Background gradient based on product */}
+              <div className={cn(
+                "absolute inset-0 opacity-10",
+                project.product === 'Cortex XSIAM' && "bg-gradient-to-br from-[#00cd67] to-[#00d9ff]",
+                project.product === 'Cortex XDR' && "bg-gradient-to-br from-cyan-500 to-blue-500",
+                project.product === 'Cortex XSOAR' && "bg-gradient-to-br from-purple-500 to-pink-500",
+                project.product === 'Prisma Cloud' && "bg-gradient-to-br from-blue-500 to-indigo-500",
+                project.product === 'Strata' && "bg-gradient-to-br from-orange-500 to-red-500",
+                !project.product && "bg-gradient-to-br from-gray-500 to-gray-700"
+              )} />
+
+              {/* Grid pattern overlay */}
+              <div
+                className="absolute inset-0 opacity-5"
+                style={{
+                  backgroundImage: `linear-gradient(90deg, currentColor 1px, transparent 1px),
+                                   linear-gradient(180deg, currentColor 1px, transparent 1px)`,
+                  backgroundSize: '20px 20px'
+                }}
+              />
+
+              {/* Cortex logo placeholder */}
+              <div className="relative z-10 flex flex-col items-center">
+                <div className={cn(
+                  "w-20 h-20 rounded-lg flex items-center justify-center mb-3 shadow-lg",
+                  "bg-gradient-to-br from-[#00d9ff] to-[#00cd67]"
+                )}>
+                  <span className="text-black font-bold text-3xl font-display">C</span>
+                </div>
+                <span className="text-xs uppercase tracking-widest opacity-70 text-muted-foreground font-mono">
+                  {project.product || "Cortex Ecosystem"}
+                </span>
               </div>
-              <span className="text-xs uppercase tracking-widest opacity-50">No Media</span>
             </div>
           )}
         </div>
@@ -85,23 +127,49 @@ export function ProjectCard({ project }: { project: Project }) {
               <h3 className="text-lg font-bold font-mono uppercase tracking-tight text-foreground group-hover:text-primary transition-colors">
                 {project.name}
               </h3>
-              <div className="flex flex-wrap items-center gap-2 mt-1">
-                <span className="text-xs text-muted-foreground font-mono">
-                  {project.product}
-                </span>
-                {project.theatre && (
-                   <>
-                    <span className="text-muted-foreground/30">•</span>
-                    <span className="text-xs text-muted-foreground font-mono">{project.theatre}</span>
-                   </>
-                )}
-                 {project.author && (
-                   <>
-                    <span className="text-muted-foreground/30">•</span>
-                    <span className="text-xs text-muted-foreground font-mono text-primary/80">@{project.author}</span>
-                   </>
-                )}
-              </div>
+              {/* Tags */}
+              {(project.product || project.usecase || project.theatre) && (
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {project.product && (
+                    <Link href={`/?product=${encodeURIComponent(project.product)}`}>
+                      <Badge
+                        variant="secondary"
+                        className={cn(
+                          "text-[10px] px-2 py-0.5 cursor-pointer hover:opacity-80 transition-opacity",
+                          getProductColor(project.product)
+                        )}
+                      >
+                        {project.product}
+                      </Badge>
+                    </Link>
+                  )}
+                  {project.usecase && (
+                    <Link href={`/?usecase=${encodeURIComponent(project.usecase)}`}>
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] px-2 py-0.5 border-primary/30 text-primary cursor-pointer hover:bg-primary/10 transition-colors"
+                      >
+                        {project.usecase}
+                      </Badge>
+                    </Link>
+                  )}
+                  {project.theatre && (
+                    <Link href={`/?theatre=${encodeURIComponent(project.theatre)}`}>
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] px-2 py-0.5 cursor-pointer hover:bg-accent transition-colors"
+                      >
+                        {project.theatre}
+                      </Badge>
+                    </Link>
+                  )}
+                </div>
+              )}
+              {project.author && (
+                <div className="flex flex-wrap items-center gap-2 mt-1">
+                  <span className="text-xs text-muted-foreground font-mono text-primary/80">@{project.author}</span>
+                </div>
+              )}
             </div>
             <Badge variant="outline" className={cn("uppercase tracking-wider text-[10px] font-bold px-2 py-0.5 h-6", statusClass)}>
               {project.status}
@@ -140,7 +208,7 @@ export function ProjectCard({ project }: { project: Project }) {
               )}>
                 {project.description}
                 {!isExpanded && project.description.length > 150 && (
-                   <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+                  <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-card to-transparent pointer-events-none" />
                 )}
               </div>
               {project.description.length > 150 && (
@@ -158,33 +226,42 @@ export function ProjectCard({ project }: { project: Project }) {
           </div>
 
           <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-             <div className="flex items-center gap-2">
-                <div 
-                  className="w-2.5 h-2.5 rounded-full" 
-                  style={{ backgroundColor: LANGUAGE_COLOURS[project.language] || LANGUAGE_COLOURS.Default }}
-                />
-                <span className="text-xs font-mono text-muted-foreground">{project.language}</span>
-                {project.githubApi && project.repo && !project.stars && (
-                  <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground ml-2">
-                    API Enabled
-                  </span>
-                )}
-             </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="w-2.5 h-2.5 rounded-full"
+                style={{ backgroundColor: LANGUAGE_COLOURS[project.language] || LANGUAGE_COLOURS.Default }}
+              />
+              <span className="text-xs font-mono text-muted-foreground">{project.language}</span>
+              {project.githubApi && project.repo && !project.stars && (
+                <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground ml-2">
+                  API Enabled
+                </span>
+              )}
+            </div>
 
-             <div className="flex gap-2">
-               {project.repo && (
-                 <Button size="sm" variant="ghost" className="h-8 w-8 p-0" asChild>
-                   <a href={`https://github.com/${project.repo}`} target="_blank" rel="noopener noreferrer">
-                     <Github className="w-4 h-4" />
-                   </a>
-                 </Button>
-               )}
-               <Button size="sm" className="h-8 text-xs font-bold uppercase tracking-wider bg-primary text-black hover:bg-primary/90" asChild>
-                 <a href={project.link} target="_blank" rel="noopener noreferrer">
-                   View Project <ExternalLink className="w-3 h-3 ml-2" />
-                 </a>
-               </Button>
-             </div>
+            <div className="flex gap-2">
+              {/* PRIMARY: View Details (local page) */}
+              <Button size="sm" className="h-8 text-xs font-bold uppercase tracking-wider bg-primary text-black hover:bg-primary/90" asChild>
+                <Link href={`/project/${project.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                  <Eye className="w-3 h-3 mr-2" />
+                  View Details
+                </Link>
+              </Button>
+
+              {/* SECONDARY: External links */}
+              {project.repo && (
+                <Button size="sm" variant="outline" className="h-8 w-8 p-0" asChild>
+                  <a href={`https://github.com/${project.repo}`} target="_blank" rel="noopener noreferrer">
+                    <Github className="w-4 h-4" />
+                  </a>
+                </Button>
+              )}
+              <Button size="sm" variant="outline" className="h-8 w-8 p-0" asChild>
+                <a href={project.link} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </Card>

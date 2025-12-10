@@ -1,0 +1,180 @@
+[
+  {
+    "name": "XSIAM-Prisma Cloud CDR Lab Environment",
+    "description": "This repository provides a hands-on lab environment for practicing Cloud Detection and Response (CDR) using Palo Alto Networks Cortex XSIAM and Prisma Cloud. The labs simulate real-world, cloud-native threats within Kubernetes environments, focusing on container security challenges. By using this lab, security practitioners can gain practical experience in detecting and responding to threats like containerized cryptominers, vulnerable deployments, and behavioral anomalies (ABIOC) using advanced cloud security tools.\n\nTarget Audience: Cloud Security Engineers, SOC Analysts, Security Researchers, and anyone interested in hands-on experience with XSIAM and Prisma Cloud for container security.",
+    "status": "active",
+    "link": "https://github.com/hankthebldr/CDR",
+    "language": "YAML",
+    "repo": "hankthebldr/CDR",
+    "githubApi": true,
+    "product": "Prisma Cloud",
+    "author": "hankthebldr",
+    "theatre": "Global",
+    "usecase": "Cloud Detection and Response (CDR)",
+    "date": "2025-12-07"
+  },
+  {
+    "name": "XDRTop",
+    "description": "A high-performance Rust CLI monitoring tool for Cortex XSIAM, CLOUD and XDR, delivering real-time, interactive case tracking with advanced terminal-based visualisation and comprehensive filtering capabilities.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/xdrtop/releases/latest",
+    "language": "Rust",
+    "repo": "gocortexio/xdrtop",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/gocortexio/xdrtop/main/assets/xdrtop-logo.png",
+      "alt": "XDRTop terminal demo showing real-time case monitoring"
+    },
+    "author": "GoCortex Team",
+    "product": "Cortex XSIAM",
+    "theatre": "Global",
+    "usecase": "Monitoring",
+    "date": "2025-12-07"
+  },
+  {
+    "name": "MockTAXII",
+    "description": "A comprehensive TAXII 2.x server designed for testing XSIAM and XSOAR Threat Intelligence Management (TIM). MockTAXII offers a complete STIX/TAXII 2.1 implementation, generating realistic indicators, campaigns and reports, all with rich, interlinked relationships.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/mocktaxii/releases/latest",
+    "language": "Python",
+    "repo": "gocortexio/mocktaxii",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/gocortexio/mocktaxii/refs/heads/main/static/mocktaxii-logo.png",
+      "alt": "MockTAXII logo"
+    },
+    "author": "GoCortex Team",
+    "product": "Cortex XSIAM",
+    "theatre": "Global",
+    "usecase": "Testing",
+    "date": "2025-12-06"
+  },
+  {
+    "name": "SignalBench",
+    "description": "A Rust-based application for Linux that generates endpoint telemetry aligned with MITRE ATT&CK techniques for security analytics, research, and training environments. SignalBench allows security professionals to generate realistic endpoint telemetry patterns.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/signalbench/releases/latest",
+    "language": "Rust",
+    "repo": "gocortexio/signalbench",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/gocortexio/signalbench/refs/heads/main/assets/signalbench-logo-baby.png",
+      "alt": "SignalBench logo"
+    },
+    "author": "GoCortex Team",
+    "product": "Cortex XDR",
+    "theatre": "Global",
+    "usecase": "Testing",
+    "date": "2025-12-01"
+  },
+  {
+    "name": "Snellen for Containers",
+    "description": "A web-based platform for running simulated cyber attacks in containerised environments. It automatically downloads and manages the Rust-based Snellen CLI, so no manual setup or terminal access is required.",
+    "status": "development",
+    "link": "https://github.com/simonsigre/snellen-for-containers",
+    "language": "TypeScript",
+    "author": "Simon Sigre",
+    "product": "Cortex XDR",
+    "theatre": "EMEA",
+    "usecase": "Simulation",
+    "date": "2025-11-20",
+    "media": {
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1667372393119-c85c020d575c?q=80&w=1000&auto=format&fit=crop",
+      "alt": "Container visualisation"
+    }
+  },
+  {
+    "name": "GCGit",
+    "description": "Go Cortex Git is a Rust-based CLI tool designed to serve as a lightweight abstraction layer between local Git operations and the Cortex XSIAM REST API. It enables security teams to version-control and deploy XSIAM configuration objects.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/gcgit/releases/latest",
+    "language": "Rust",
+    "repo": "gocortexio/gcgit",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/gocortexio/gcgit/main/assets/gcgit-logo.png",
+      "alt": "GCGit Logo"
+    },
+    "author": "GoCortex Team",
+    "product": "Cortex XSIAM",
+    "theatre": "Global",
+    "usecase": "Development",
+    "date": "2025-11-15"
+  },
+  {
+    "name": "AckbarX",
+    "description": "A robust Rust-based SNMP trap forwarder designed to reliably capture SNMP v1/v2c/v3 traps from multiple ports and hosts and securely forward them to Cortex XSIAM HTTP endpoints.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/ackbarx/releases/latest",
+    "language": "Rust",
+    "repo": "gocortexio/ackbarx",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/gocortexio/ackbarx/main/assets/ackbarx-trap-logo.png",
+      "alt": "AckbarX SNMP trap forwarding architecture"
+    },
+    "author": "GoCortex Team",
+    "product": "Cortex XSIAM",
+    "theatre": "Global",
+    "usecase": "Connectivity",
+    "date": "2025-08-18"
+  },
+  {
+    "name": "GoCortex Broken Bank",
+    "description": "An intentionally vulnerable application designed to support Palo Alto Networks Cortex Cloud and XSIAM/XDR training. Features a wide range of deliberately implemented security vulnerabilities for assessment and testing.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/gocortexbrokenbank/releases/latest",
+    "language": "Python",
+    "repo": "gocortexio/gocortexbrokenbank",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/gocortexio/gocortexbrokenbank/main/static/images/brokenbank-logo.png",
+      "alt": "Broken Bank title logo"
+    },
+    "author": "GoCortex Team",
+    "product": "Cortex XSIAM",
+    "theatre": "Global",
+    "usecase": "Training",
+    "date": "2025-09-10"
+  },
+  {
+    "name": "sigma2xsiam",
+    "description": "A custom pySigma backend specifically designed to convert Sigma rules into functional and accurate Cortex XSIAM XQL queries. Bridges the gap left by the standard pysigma-backend-cortexxdr.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/sigma2xsiam/releases",
+    "language": "Python",
+    "repo": "gocortexio/sigma2xsiam",
+    "githubApi": true,
+    "author": "GoCortex Team",
+    "product": "Cortex XSIAM",
+    "theatre": "Global",
+    "usecase": "Utility",
+    "date": "2025-09-13"
+  },
+  {
+    "name": "PyGremlinBox",
+    "description": "A comprehensive container project housing multiple Python modules for supply chain security testing. Each subproject contains different policy implementations that trigger alerts in dependency scanning tools.",
+    "status": "active",
+    "link": "https://github.com/gocortexio/pygremlinbox/releases",
+    "language": "Python",
+    "repo": "gocortexio/pygremlinbox",
+    "githubApi": true,
+    "media": {
+      "type": "image",
+      "url": "https://github.com/gocortexio/pygremlinbox/blob/main/assets/pygremlinbox-logo.png?raw=true",
+      "alt": "Python Gremlin in a box"
+    },
+    "author": "GoCortex Team",
+    "product": "Prisma Cloud",
+    "theatre": "Global",
+    "usecase": "Testing",
+    "date": "2025-09-15"
+  }
+]

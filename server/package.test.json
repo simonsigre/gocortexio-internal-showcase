@@ -1,0 +1,20 @@
+{
+    "scripts": {
+        "test": "NODE_ENV=test jest --runInBand",
+        "test:watch": "NODE_ENV=test jest --watch",
+        "test:coverage": "NODE_ENV=test jest --coverage"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "coveragePathIgnorePatterns": [
+            "/node_modules/"
+        ],
+        "testMatch": [
+            "**/tests/**/*.test.js"
+        ],
+        "setupFilesAfterEnv": [
+            "<rootDir>/tests/setup.js"
+        ],
+        "transform": {}
+    }
+}

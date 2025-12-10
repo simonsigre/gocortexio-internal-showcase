@@ -8,7 +8,13 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import SubmitPage from "@/pages/submit";
 import AdminPage from "@/pages/admin";
+import ArsenalPage from "@/pages/arsenal";
+import ProjectDetail from "@/pages/project-detail";
+import MyProjects from "@/pages/my-projects";
+import Announcements from "@/pages/announcements";
+import AnnouncementDetail from "@/pages/announcement-detail";
 import { Layout } from "@/components/layout";
+import { LoginPage, ForbiddenPage } from "@/components/protected-route";
 
 function AppRouter() {
   return (
@@ -17,6 +23,13 @@ function AppRouter() {
         <Route path="/" component={Home} />
         <Route path="/submit" component={SubmitPage} />
         <Route path="/admin" component={AdminPage} />
+        <Route path="/arsenal" component={ArsenalPage} />
+        <Route path="/project/:id" component={ProjectDetail} />
+        <Route path="/my-projects" component={MyProjects} />
+        <Route path="/announcements" component={Announcements} />
+        <Route path="/announcement/:id" component={AnnouncementDetail} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/403" component={ForbiddenPage} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

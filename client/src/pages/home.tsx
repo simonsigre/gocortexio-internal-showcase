@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "wouter";
 import { Project } from "@/lib/types";
 import { ProjectCard } from "@/components/project-card";
 import { FilterBar } from "@/components/filter-bar";
@@ -7,6 +8,7 @@ import { subDays, isAfter, parseISO } from "date-fns";
 import { Loader2 } from "lucide-react";
 
 export default function Home() {
+  const [location] = useLocation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -26,128 +28,156 @@ export default function Home() {
 
   useEffect(() => {
     // Use BASE_URL to ensure correct path fetching in both dev and prod (GitHub Pages)
-    const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
-      ? import.meta.env.BASE_URL 
-      : `${import.meta.env.BASE_URL}/`;
-      
-    // Cache busting: Add a timestamp query param to force a fresh fetch
-    const projectsUrl = `${baseUrl}projects.json?t=${new Date().getTime()}`;
-    console.log("Fetching projects from:", projectsUrl);
+    const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+      ? import.meta.env.BASE_URL
+      : `${ import.meta.env.BASE_URL }/`;
 
-    fetch(projectsUrl)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Projects loaded:", data.length);
-        setProjects(data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to load projects:", err);
-        setIsLoading(false);
-        // Keep projects empty which triggers "No projects found"
-        // Ideally we should show an error state
-      });
+// Cache busting: Add a timestamp query param to force a fresh fetch
+const projectsUrl = `${baseUrl}projects.json?t=${new Date().getTime()}`;
+console.log("Fetching projects from:", projectsUrl);
+
+fetch(projectsUrl)
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
+  .then((data) => {
+    console.log("Projects loaded:", data.length);
+    setProjects(data);
+    setIsLoading(false);
+  })
+  .catch((err) => {
+    console.error("Failed to load projects:", err);
+    // Log to body for test visibility
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'project-load-error';
+    errorDiv.textContent = err.toString();
+    document.body.appendChild(errorDiv);
+    setIsLoading(false);
+  });
   }, []);
 
-  const uniqueAuthors = useMemo(() => Array.from(new Set(projects.map(p => p.author).filter(Boolean))), [projects]);
-  const uniqueUsecases = useMemo(() => Array.from(new Set(projects.map(p => p.usecase).filter(Boolean))), [projects]);
+// Check for URL query parameters and apply them as filters
+// This runs whenever the location (URL) changes
+useEffect(() => {
+  // location is a string like "/" or "/?product=xyz" from wouter
+  const loc = location as string;
+  const queryString = loc.includes('?') ? loc.split('?')[1] : '';
+  const searchParams = new URLSearchParams(queryString);
 
-  const filteredProjects = useMemo(() => {
-    return projects.filter(project => {
-      // Search filter
+  const productParam = searchParams.get('product');
+  const theatreParam = searchParams.get('theatre');
+  const usecaseParam = searchParams.get('usecase');
+  const authorParam = searchParams.get('author');
+
+  // Update filters based on URL params
+  setFilters({
+    product: productParam || null,
+    theatre: theatreParam || null,
+    usecase: usecaseParam || null,
+    author: authorParam || null,
+    period: null
+  });
+}, [location]); // Re-run when location changes
+
+const uniqueAuthors = useMemo(() => Array.from(new Set(projects.map(p => p.author).filter(Boolean))), [projects]);
+const uniqueUsecases = useMemo(() => Array.from(new Set(projects.map(p => p.usecase).filter(Boolean))), [projects]);
+
+const filteredProjects = useMemo(() => {
+  return projects.filter(project => {
+    // Search filter - only apply if search is not empty
+    if (search.trim()) {
       const searchLower = search.toLowerCase();
-      const matchesSearch = 
+      const matchesSearch =
         project.name.toLowerCase().includes(searchLower) ||
         project.description.toLowerCase().includes(searchLower) ||
         project.language.toLowerCase().includes(searchLower) ||
-        project.author?.toLowerCase().includes(searchLower);
+        (project.author?.toLowerCase() || '').includes(searchLower);
 
       if (!matchesSearch) return false;
+    }
 
-      // Dropdown filters
-      if (filters.product && project.product !== filters.product) return false;
-      if (filters.theatre && project.theatre !== filters.theatre) return false;
-      if (filters.author && project.author !== filters.author) return false;
-      if (filters.usecase && project.usecase !== filters.usecase) return false;
+    // Dropdown filters
+    if (filters.product && project.product !== filters.product) return false;
+    if (filters.theatre && project.theatre !== filters.theatre) return false;
+    if (filters.author && project.author !== filters.author) return false;
+    if (filters.usecase && project.usecase !== filters.usecase) return false;
 
-      // Period filter (using date added to the project)
-      if (filters.period) {
-         const today = new Date();
-         // Default to today if no date exists on the project (for legacy data)
-         const projectDate = project.date ? parseISO(project.date) : parseISO("2020-01-01");
-         
-         let cutoffDate;
-         if (filters.period === "day") cutoffDate = subDays(today, 1);
-         else if (filters.period === "week") cutoffDate = subDays(today, 7);
-         else if (filters.period === "month") cutoffDate = subDays(today, 30);
-         
-         if (cutoffDate && !isAfter(projectDate, cutoffDate)) return false;
-      }
+    // Period filter (using date added to the project)
+    if (filters.period) {
+      const today = new Date();
+      // Default to today if no date exists on the project (for legacy data)
+      const projectDate = project.date ? parseISO(project.date) : parseISO("2020-01-01");
 
-      return true;
-    });
-  }, [projects, search, filters]);
+      let cutoffDate;
+      if (filters.period === "day") cutoffDate = subDays(today, 1);
+      else if (filters.period === "week") cutoffDate = subDays(today, 7);
+      else if (filters.period === "month") cutoffDate = subDays(today, 30);
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-        <Loader2 className="w-12 h-12 text-primary animate-spin" />
-        <p className="text-muted-foreground animate-pulse">Loading project database...</p>
-      </div>
-    );
-  }
+      if (cutoffDate && !isAfter(projectDate, cutoffDate)) return false;
+    }
 
+    return true;
+  });
+}, [projects, search, filters]);
+
+if (isLoading) {
   return (
-    <div className="space-y-8">
-      <div className="text-center space-y-4 py-8">
-        <motion.h1 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-5xl font-display font-bold uppercase tracking-widest"
-        >
-          Project <span className="text-primary glow-text">Showcase</span>
-        </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-muted-foreground max-w-2xl mx-auto"
-        >
-          Discover and collaborate on independent tools and projects for the Cortex ecosystem.
-          Built by the community, for the community.
-        </motion.p>
-      </div>
-
-      <FilterBar 
-        search={search} 
-        setSearch={setSearch}
-        filters={filters}
-        setFilters={setFilters}
-        uniqueAuthors={uniqueAuthors as string[]}
-        uniqueUsecases={uniqueUsecases as string[]}
-      />
-
-      {filteredProjects.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-border rounded-lg bg-card/20">
-          <p className="text-muted-foreground">No projects found matching your criteria.</p>
-        </div>
-      ) : (
-        <motion.div 
-          layout
-          className="grid grid-cols-1 gap-6"
-        >
-          <AnimatePresence>
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.name} project={project} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      )}
+    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
+      <Loader2 className="w-12 h-12 text-primary animate-spin" />
+      <p className="text-muted-foreground animate-pulse">Loading project database...</p>
     </div>
   );
+}
+
+return (
+  <div className="space-y-8">
+    <div className="text-center space-y-4 py-8">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-4xl md:text-5xl font-display font-bold uppercase tracking-widest"
+      >
+        Project <span className="text-primary glow-text">Showcase</span>
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-muted-foreground max-w-2xl mx-auto"
+      >
+        Discover and collaborate on independent tools and projects for the Cortex ecosystem.
+        Built by the community, for the community.
+      </motion.p>
+    </div>
+
+    <FilterBar
+      search={search}
+      setSearch={setSearch}
+      filters={filters}
+      setFilters={setFilters}
+      uniqueAuthors={uniqueAuthors as string[]}
+      uniqueUsecases={uniqueUsecases as string[]}
+    />
+
+    {filteredProjects.length === 0 ? (
+      <div className="text-center py-20 border border-dashed border-border rounded-lg bg-card/20">
+        <p className="text-muted-foreground">No projects found matching your criteria.</p>
+      </div>
+    ) : (
+      <motion.div
+        layout
+        className="grid grid-cols-1 gap-6"
+      >
+        <AnimatePresence>
+          {filteredProjects.map((project) => (
+            <ProjectCard key={project.name} project={project} />
+          ))}
+        </AnimatePresence>
+      </motion.div>
+    )}
+  </div>
+);
 }

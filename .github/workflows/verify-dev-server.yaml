@@ -1,0 +1,54 @@
+name: Verify Dev Server
+
+# This workflow verifies that the dev server starts correctly
+# Run manually to test the setup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify-dev-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start dev server in background
+        run: npm run dev:client &
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for dev server to start on port 5173..."
+          timeout 60 bash -c 'until curl -s http://localhost:5173 > /dev/null; do sleep 1; done'
+          echo "✅ Dev server is running!"
+
+      - name: Verify server response
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5173)
+          if [ "$response" = "200" ]; then
+            echo "✅ Server returned 200 OK"
+          else
+            echo "❌ Server returned $response"
+            exit 1
+          fi
+
+      - name: Check server content
+        run: |
+          content=$(curl -s http://localhost:5173)
+          if [[ "$content" == *"<html"* ]]; then
+            echo "✅ Server is serving HTML content"
+          else
+            echo "❌ Server is not serving valid HTML"
+            exit 1
+          fi

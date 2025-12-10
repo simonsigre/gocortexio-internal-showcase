@@ -1,0 +1,35 @@
+[
+  {
+    "id": "welcome-to-cortex-arsenal",
+    "title": "Welcome to Cortex Pre-Sales Arsenal",
+    "excerpt": "A centralized platform for discovering, sharing, and promoting innovative Cortex ecosystem projects.",
+    "author": "Arsenal Team",
+    "date": "2024-12-08",
+    "category": "announcement",
+    "tags": ["platform", "launch", "pre-sales"],
+    "featured": true,
+    "content": "# Welcome to the Cortex Pre-Sales Arsenal\n\nWe're excited to introduce the **Cortex Pre-Sales Arsenal** - your centralized hub for discovering, sharing, and promoting innovative tools and projects across the Palo Alto Networks Cortex ecosystem.\n\n## What is the Arsenal?\n\nThe Arsenal is a curated collection of:\n\n- **Pre-sales tools** and demos\n- **SOC optimization playbooks**\n- **Integration frameworks**\n- **Training environments**\n- **Testing utilities**\n\n```mermaid\ngraph TD\n    A[Community Projects] --> B{Review Process}\n    B --> C[Incubation Pipeline]\n    C --> D[Quality Assessment]\n    D --> E{Promotion Decision}\n    E -->|Approved| F[Arsenal Release]\n    E -->|Needs Work| C\n    F --> G[Pre-Sales Teams]\n    F --> H[Regional Rollout]\n    F --> I[Global Distribution]\n```\n\n## Key Features\n\n### 🚀 Auto-Import from GitHub\nAutomatically discovers and imports repositories from watched organizations:\n- Palo-Cortex (Official PANW Cortex team)\n- Community contributors\n\n### 🎯 Intelligent Categorization\nProjects are automatically tagged by:\n- **Product**: XSIAM, XDR, XSOAR, Prisma Cloud, Strata\n- **Use Case**: Monitoring, Testing, Automation, SOC Ops\n- **Status**: Active, Development, Beta, Deprecated\n\n### 📊 Promotion Pipeline\nHigh-quality projects undergo:\n1. Nomination by champions\n2. Documentation review\n3. Quality validation\n4. Production readiness assessment\n5. Promotion to Arsenal releases\n\n## Getting Started\n\n```bash\n# Clone the Arsenal\ngit clone https://github.com/Palo-Cortex/cortex-arsenal\n\n# Install dependencies\nnpm install\n\n# Start exploring\nnpm run dev\n```\n\n## Statistics\n\n| Metric | Count |\n|--------|-------|\n| Total Projects | 20 |\n| Active Tools | 18 |\n| SOC Playbooks | 11 |\n| In Incubation | 3 |\n\n## Join the Community\n\nContribute your projects, share feedback, and help us build the best pre-sales toolkit in the industry!\n\n[Submit a Project](/submit) | [View Arsenal](/arsenal) | [Documentation](https://github.com/Palo-Cortex)\n"
+  },
+  {
+    "id": "ai-powered-documentation",
+    "title": "New AI-Powered Documentation Features",
+    "excerpt": "Automatic README generation and quality validation now available to standardize submissions.",
+    "author": "Arsenal Team",
+    "date": "2024-11-25",
+    "category": "feature",
+    "tags": ["AI", "documentation", "automation"],
+    "featured": false,
+    "content": "# AI-Powered Documentation Features\n\n## Overview\n\nWe've introduced intelligent documentation extraction and validation to ensure every project in the Arsenal meets quality standards.\n\n## New Capabilities\n\n### 📄 Automatic README Parsing\n\n```typescript\ninterface DocumentationExtractor {\n  readme: string;\n  setup?: string;\n  deployment?: string;\n  api?: string;\n  troubleshooting?: string;\n}\n```\n\nThe system now automatically:\n- Extracts README content from repositories\n- Identifies setup/installation instructions\n- Parses API documentation\n- Detects troubleshooting guides\n\n### ✅ Quality Validation\n\n```mermaid\nflowchart LR\n    A[Project Submitted] --> B{README Present?}\n    B -->|No| C[Auto-generate]\n    B -->|Yes| D{Quality Check}\n    D -->|Pass| E[Approved]\n    D -->|Fail| F[Request Improvements]\n    C --> D\n```\n\n### 🎯 Validation Rules\n\n1. **Minimum length**: 100 characters\n2. **Required sections**:\n   - Description\n   - Installation\n   - Usage\n3. **Code examples**: At least one\n4. **Links validation**: All URLs must be reachable\n\n## Impact\n\n> **85% improvement** in documentation consistency across the Arsenal\n\n## Example\n\nBefore:\n```markdown\n# My Tool\nA tool for XSIAM.\n```\n\nAfter:\n```markdown\n# XSIAM Alert Enrichment Tool\n\n## Overview\nAutomated enrichment pipeline for XSIAM alerts using threat intelligence APIs.\n\n## Installation\n\\`\\`\\`bash\npip install xsiam-enrichment\n\\`\\`\\`\n\n## Usage\n\\`\\`\\`python\nfrom xsiam_enrichment import enrich_alert\nresult = enrich_alert(alert_id)\n\\`\\`\\`\n```\n\n## Try It Now\n\nSubmit your project and see the AI documentation assistant in action!\n"
+  },
+  {
+    "id": "soc-playbooks-expansion",
+    "title": "SOC Playbooks Library Expansion",
+    "excerpt": "11 new vendor-specific playbooks added from Palo-Cortex organization covering Crowdstrike, Microsoft Defender, Proofpoint, and more.",
+    "author": "SOC Team",
+    "date": "2024-12-01",
+    "category": "update",
+    "tags": ["playbooks", "SOC", "integrations"],
+    "featured": false,
+    "content": "# SOC Playbooks Library Expansion\n\n## New Vendor Integrations\n\nWe've significantly expanded our SOC playbooks library with 11 new vendor-specific integration packs.\n\n### Added Integrations\n\n```mermaid\nmindmap\n  root((SOC Playbooks))\n    EDR/XDR\n      Crowdstrike Falcon\n      Microsoft Defender\n      Trend Micro Vision One\n    Email Security\n      Proofpoint TAP\n      Microsoft Graph Security\n    Threat Intelligence\n      Free TI Feeds\n      MITRE ATT&CK\n    Framework\n      Common Playbooks\n      SOC Toolkit\n      Optimization Framework\n```\n\n## Key Features\n\n### 🔄 Automated Response\nAll playbooks include:\n- Auto-enrichment workflows\n- Incident response procedures  \n- Escalation logic\n- Remediation actions\n\n### 📊 Metrics Dashboard\n\n| Integration | Playbooks | Use Cases |\n|-------------|-----------|----------|\n| Crowdstrike | 8 | EDR alerts, threat hunting |\n| MS Defender | 12 | Endpoint protection, email |\n| Proofpoint | 6 | Email threats, URL analysis |\n| Trend Micro | 5 | Cloud workload protection |\n\n### 🎯 MITRE ATT&CK Mapping\n\nEvery playbook is mapped to MITRE techniques:\n\n```python\n# Example: Crowdstrike Falcon Alert Handler\nMITRE_TECHNIQUES = [\n    \"T1059\",  # Command and Scripting Interpreter\n    \"T1055\",  # Process Injection\n    \"T1027\",  # Obfuscated Files or Information\n]\n```\n\n## Getting Started\n\n### Installation\n\n```bash\n# Clone the SOC Framework\ngit clone https://github.com/Palo-Cortex/soc-optimization\n\n# Install dependencies\ncd soc-optimization\npip install -r requirements.txt\n\n# Import playbooks\npython import_playbooks.py --vendor crowdstrike\n```\n\n### Configuration\n\n```yaml\n# config.yml\nintegrations:\n  crowdstrike:\n    api_key: ${CROWDSTRIKE_API_KEY}\n    base_url: https://api.crowdstrike.com\n    \n  microsoft_defender:\n    tenant_id: ${AZURE_TENANT_ID}\n    client_id: ${AZURE_CLIENT_ID}\n```\n\n## What's Next?\n\nUpcoming integrations:\n- SentinelOne\n- Carbon Black\n- Palo Alto Networks Cortex XDR (native)\n\nStay tuned!\n"
+  }
+]
