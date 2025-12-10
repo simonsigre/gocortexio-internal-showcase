@@ -11,7 +11,11 @@
     "author": "hankthebldr",
     "theatre": "Global",
     "usecase": "Cloud Detection and Response (CDR)",
-    "date": "2025-12-07"
+    "date": "2025-12-07",
+    "incubationStatus": "ready",
+    "promotionTarget": "global",
+    "maturityScore": 95,
+    "reviewNotes": "Excellent documentation and test coverage. Ready for global release."
   },
   {
     "name": "XDRTop",
@@ -30,7 +34,11 @@
     "product": "Cortex XSIAM",
     "theatre": "Global",
     "usecase": "Monitoring",
-    "date": "2025-12-07"
+    "date": "2025-12-07",
+    "incubationStatus": "promoted",
+    "promotionTarget": "pre-sales",
+    "maturityScore": 100,
+    "reviewNotes": "Already widely used by pre-sales teams. Official promotion confirmed."
   },
   {
     "name": "MockTAXII",
@@ -49,7 +57,11 @@
     "product": "Cortex XSIAM",
     "theatre": "Global",
     "usecase": "Testing",
-    "date": "2025-12-06"
+    "date": "2025-12-06",
+    "incubationStatus": "in-review",
+    "promotionTarget": "regional-nam",
+    "maturityScore": 75,
+    "reviewNotes": "Pending security review for external connectivity features."
   },
   {
     "name": "SignalBench",
@@ -68,7 +80,11 @@
     "product": "Cortex XDR",
     "theatre": "Global",
     "usecase": "Testing",
-    "date": "2025-12-01"
+    "date": "2025-12-01",
+    "incubationStatus": "nominated",
+    "promotionTarget": "regional-emea",
+    "maturityScore": 40,
+    "reviewNotes": "Initial nomination. Needs documentation improvements."
   },
   {
     "name": "Secops Framework",
