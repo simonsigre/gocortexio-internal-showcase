@@ -30,7 +30,7 @@ const latestRelease: ArsenalRelease = {
   releaseDate: "2024-12-08",
   downloadUrl: "https://github.com/Palo-Cortex/cortex-arsenal/releases/latest",
   size: "2.4 GB",
-  description: "The Cortex Arsenal is a comprehensive compilation of battle-tested pre-sales tools, demo environments, and sales enablement resources for Palo Alto Networks Cortex products. This release includes the latest incubated and promoted tools aligned to specific sales processes.",
+  description: "The Cortex Arsenal is a comprehensive compilation of battle-tested technical content, demo environments, and sales enablement resources for Palo Alto Networks Cortex products. This release includes the latest incubated and promoted tools aligned to specific sales processes.",
   highlights: [
     "11 new SOC optimization playbooks from Palo-Cortex",
     "Enhanced XSIAM demo environments with CDR scenarios",
@@ -109,7 +109,7 @@ export default function ArsenalPage() {
           </h1>
         </div>
         <p className="text-muted-foreground max-w-3xl mx-auto text-lg">
-          The definitive collection of pre-sales tools, demo environments, and sales enablement resources
+          The definitive collection of technical content, demo environments, and sales enablement resources
           for Palo Alto Networks Cortex ecosystem. Curated, tested, and aligned to your sales process.
         </p>
       </motion.div>

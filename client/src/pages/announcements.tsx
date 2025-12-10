@@ -77,7 +77,7 @@ export default function Announcements() {
     };
 
     const targetConfig = {
-        'pre-sales': { label: 'Pre-Sales Arsenal', icon: TrendingUp },
+        'pre-sales': { label: 'Content Arsenal', icon: TrendingUp },
         'regional-nam': { label: 'NAM Regional', icon: Target },
         'regional-emea': { label: 'EMEA Regional', icon: Target },
         'regional-japac': { label: 'JAPAC Regional', icon: Target },
@@ -97,7 +97,7 @@ export default function Announcements() {
                         <span className="text-[#00cd67]">Arsenal</span> Announcements
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                        Latest updates, featured projects, and pre-sales promotion pipeline
+                        Latest updates, featured projects, and content promotion pipeline
                     </p>
                 </motion.div>
             </div>
@@ -209,9 +209,9 @@ export default function Announcements() {
                             <div className="flex items-start gap-4">
                                 <Rocket className="w-6 h-6 text-[#00cd67] flex-shrink-0 mt-1" />
                                 <div>
-                                    <h3 className="font-semibold mb-2">Pre-Sales Promotion Pipeline</h3>
+                                    <h3 className="font-semibold mb-2">Content Promotion Pipeline</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        High-quality projects being evaluated for promotion to pre-sales teams and regional releases.
+                                        High-quality projects being evaluated for promotion to field teams and regional releases.
                                         Projects undergo documentation review, quality validation, and production readiness assessment.
                                     </p>
                                 </div>

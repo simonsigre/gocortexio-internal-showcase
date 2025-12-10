@@ -97,7 +97,7 @@ export default function IncubationHub() {
     };
 
     const targetConfig = {
-        'pre-sales': { label: 'Pre-Sales', icon: TrendingUp },
+        'pre-sales': { label: 'Content Arsenal', icon: TrendingUp },
         'regional-nam': { label: 'NAM Regional', icon: Target },
         'regional-emea': { label: 'EMEA Regional', icon: Target },
         'regional-japac': { label: 'JAPAC Regional', icon: Target },
@@ -119,7 +119,7 @@ export default function IncubationHub() {
                             Incubation <span className="text-[#00cd67]">Hub</span>
                         </h1>
                         <p className="text-muted-foreground">
-                            Projects being prepared for pre-sales and regional promotion
+                            Projects being prepared for field teams and regional promotion
                         </p>
                     </div>
                 </motion.div>
@@ -134,7 +134,7 @@ export default function IncubationHub() {
                             <h3 className="font-semibold mb-2">About the Incubation Hub</h3>
                             <p className="text-sm text-muted-foreground">
                                 The Incubation Hub showcases high-quality projects being evaluated for promotion to
-                                pre-sales teams and regional releases. Projects undergo thorough review including
+                                field teams and regional releases. Projects undergo thorough review including
                                 documentation quality, test coverage, security validation, and production readiness.
                             </p>
                         </div>
@@ -283,7 +283,7 @@ export default function IncubationHub() {
                         <Rocket className="w-16 h-16 text-[#00cd67] mx-auto mb-4" />
                         <h3 className="text-2xl font-bold mb-4">Nominate a Project for Incubation</h3>
                         <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                            Have a high-quality project ready for pre-sales or regional promotion?
+                            Have a high-quality project ready for field teams or regional promotion?
                             Nominate it for the Incubation Hub and get it in front of decision makers.
                         </p>
                         <Button className="bg-[#00cd67] text-black hover:bg-[#00cd67]/90" size="lg">

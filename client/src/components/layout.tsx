@@ -30,7 +30,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 % GoCortex<span className="text-foreground">.io</span>
               </span>
               <span className="text-xs text-muted-foreground px-2 border-l border-border ml-2">
-                Cortex Pre-Sales Arsenal
+                Cortex Content Arsenal
               </span>
             </div>
 
@@ -116,7 +116,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-border mt-auto py-8">
         <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
-          <p>Cortex Pre-Sales Arsenal &copy; {new Date().getFullYear()}</p>
+          <p>Cortex Content Arsenal &copy; {new Date().getFullYear()}</p>
           <p className="mt-2 opacity-50">System Status: ONLINE</p>
         </div>
       </footer>
