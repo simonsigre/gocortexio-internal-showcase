@@ -117,7 +117,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-border mt-auto py-8">
         <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
           <p>Cortex Content Arsenal &copy; {new Date().getFullYear()}</p>
-          <p className="mt-2 opacity-50">System Status: ONLINE</p>
         </div>
       </footer>
     </div>
