@@ -46,7 +46,7 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
              <SelectTrigger className="w-[140px] bg-card/50 border-border">
                <SelectValue placeholder="Period" />
              </SelectTrigger>
-             <SelectContent>
+             <SelectContent className="bg-white text-black">
                <SelectItem value="all">All Time</SelectItem>
                <SelectItem value="day">Last 24 Hours</SelectItem>
                <SelectItem value="week">Last 7 Days</SelectItem>
@@ -58,7 +58,7 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
             <SelectTrigger className="w-[160px] bg-card/50 border-border">
               <SelectValue placeholder="Product" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white text-black">
               <SelectItem value="all">All Products</SelectItem>
               {PRODUCTS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
             </SelectContent>
@@ -68,7 +68,7 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
             <SelectTrigger className="w-[140px] bg-card/50 border-border">
               <SelectValue placeholder="Theatre" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white text-black">
               <SelectItem value="all">All Theatres</SelectItem>
               {THEATRES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
             </SelectContent>
@@ -78,7 +78,7 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
             <SelectTrigger className="w-[140px] bg-card/50 border-border">
               <SelectValue placeholder="Author" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white text-black">
               <SelectItem value="all">All Authors</SelectItem>
               {uniqueAuthors.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
             </SelectContent>
@@ -88,7 +88,7 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
             <SelectTrigger className="w-[140px] bg-card/50 border-border">
               <SelectValue placeholder="Use Case" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white text-black">
               <SelectItem value="all">All Use Cases</SelectItem>
               {uniqueUsecases.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
             </SelectContent>
