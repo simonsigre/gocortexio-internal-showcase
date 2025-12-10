@@ -204,7 +204,7 @@ export default function SubmitPage() {
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-white text-black">
                           {PRODUCTS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                         </SelectContent>
                       </Select>
@@ -225,7 +225,7 @@ export default function SubmitPage() {
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-white text-black">
                           {THEATRES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                         </SelectContent>
                       </Select>
@@ -248,7 +248,7 @@ export default function SubmitPage() {
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-white text-black">
                           {PROJECT_STATUS.map(s => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
                         </SelectContent>
                       </Select>
@@ -372,7 +372,7 @@ export default function SubmitPage() {
                                 <SelectValue placeholder="Type" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent>
+                            <SelectContent className="bg-white text-black">
                               <SelectItem value="image">Image</SelectItem>
                               <SelectItem value="youtube">Video</SelectItem>
                             </SelectContent>
