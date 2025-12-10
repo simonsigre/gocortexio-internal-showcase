@@ -29,7 +29,7 @@ export default function Announcements() {
     const { data: posts } = useQuery<BlogPost[]>({
         queryKey: ['blog-posts'],
         queryFn: async () => {
-            const response = await fetch('/announcements.json');
+            const response = await fetch('announcements.json');
             if (!response.ok) {
                 throw new Error('Failed to fetch announcements');
             }
@@ -41,7 +41,7 @@ export default function Announcements() {
     const { data: allProjects = [] } = useQuery<Project[]>({
         queryKey: ['projects-for-announcements'],
         queryFn: async () => {
-            const response = await fetch('/projects.json');
+            const response = await fetch('projects.json');
             if (!response.ok) throw new Error('Failed to load projects');
             return response.json();
         }
