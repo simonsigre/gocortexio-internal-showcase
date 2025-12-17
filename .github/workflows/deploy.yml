@@ -40,7 +40,7 @@ jobs:
         run: npx vite build --base /${{ github.event.repository.name }}/
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist/public
 
