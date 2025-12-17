@@ -84,7 +84,7 @@ export default function AnnouncementDetail() {
   useEffect(() => {
     const fetchAnnouncement = async () => {
       try {
-        const response = await fetch('/announcements.json');
+        const response = await fetch('announcements.json');
         const announcements: Announcement[] = await response.json();
         const found = announcements.find((a) => a.id === announcementId);
         setAnnouncement(found || null);

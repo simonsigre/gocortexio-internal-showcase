@@ -21,7 +21,7 @@ export default function AdminPage() {
   const { data: allProjects = [], isLoading, refetch } = useQuery<Project[]>({
     queryKey: ['admin-projects'],
     queryFn: async () => {
-      const response = await fetch('/projects.json');
+      const response = await fetch('projects.json');
       if (!response.ok) throw new Error('Failed to load projects');
       return response.json();
     }

@@ -19,7 +19,7 @@ export default function ProjectDetail() {
   // Fetch projects data
   const { data: projects, isLoading } = useQuery<Project[]>({
     queryKey: ['projects'],
-    queryFn: () => fetch('/projects.json').then((res) => res.json()),
+    queryFn: () => fetch('projects.json').then((res) => res.json()),
   });
 
   // Find project by ID (slug from name)
