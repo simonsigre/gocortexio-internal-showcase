@@ -1,0 +1,86 @@
+name: Backup Projects Data
+
+on:
+  # Run daily at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+
+  # Manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Need write to commit backups
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git commits
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create Backup
+        run: |
+          # Create timestamp
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H-%M-%S")
+          BACKUP_FILE="backups/projects-${TIMESTAMP}.json"
+
+          # Create backups directory
+          mkdir -p backups
+
+          # Copy projects.json to backup
+          cp client/public/projects.json "${BACKUP_FILE}"
+
+          # Validate JSON
+          if ! python3 -m json.tool "${BACKUP_FILE}" > /dev/null 2>&1; then
+            echo "❌ Invalid JSON in projects.json!"
+            exit 1
+          fi
+
+          # Get project count
+          PROJECT_COUNT=$(python3 -c "import json; print(len(json.load(open('${BACKUP_FILE}'))))")
+
+          echo "✅ Backup created: ${BACKUP_FILE}"
+          echo "📦 Projects: ${PROJECT_COUNT}"
+
+          # Output for next step
+          echo "BACKUP_FILE=${BACKUP_FILE}" >> $GITHUB_ENV
+          echo "PROJECT_COUNT=${PROJECT_COUNT}" >> $GITHUB_ENV
+
+      - name: Commit Backup to Repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add backups/
+          git commit -m "🗄️ Automated backup - ${PROJECT_COUNT} projects" || echo "No changes to commit"
+          git push
+
+      - name: Cleanup Old Backups
+        run: |
+          # Keep only last 30 backups in git
+          cd backups
+          ls -t projects-*.json | tail -n +31 | xargs -r rm
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "🗑️ Cleanup old backups (keep last 30)"
+            git push
+          fi
+
+      - name: Summary
+        run: |
+          echo "### Backup Summary 📦" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **File:** \`${BACKUP_FILE}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Projects:** ${PROJECT_COUNT}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY

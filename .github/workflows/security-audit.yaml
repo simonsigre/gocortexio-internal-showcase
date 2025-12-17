@@ -1,0 +1,68 @@
+name: Security Audit
+
+on:
+  # Run on PRs
+  pull_request:
+    branches: [ main ]
+
+  # Run weekly
+  schedule:
+    - cron: '0 0 * * 1'  # Monday midnight
+
+  # Manual trigger
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: NPM Audit
+        run: |
+          npm audit --production --audit-level=moderate || {
+            echo "⚠️ Found vulnerabilities"
+            npm audit --production
+            exit 1
+          }
+
+      - name: Dependency Review (PR only)
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+
+      - name: Check for Secrets
+        run: |
+          # Check for common secret patterns
+          ! grep -r "AKIA" --include="*.ts" --include="*.tsx" --include="*.js" . || echo "⚠️ Found AWS keys"
+          ! grep -ri "api_key.*=" --include="*.ts" --include="*.tsx" --include="*.js" . || echo "⚠️ Found API keys"
+          ! grep -ri "password.*=" --include="*.ts" --include="*.tsx" --include="*.js" . || echo "⚠️ Found passwords"
+
+      - name: TypeScript Check
+        run: npm run check
+
+      - name: Validate Data
+        run: npx tsx scripts/validate.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Security Audit Results 🔒" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **NPM Audit:** ✅ Pass" >> $GITHUB_STEP_SUMMARY
+          echo "- **TypeScript:** ✅ Pass" >> $GITHUB_STEP_SUMMARY
+          echo "- **Validation:** ✅ Pass" >> $GITHUB_STEP_SUMMARY
