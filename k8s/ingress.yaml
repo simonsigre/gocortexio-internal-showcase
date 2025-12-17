@@ -1,0 +1,72 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cortex-showcase
+  namespace: cortex-showcase
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "cortex-showcase-ip"
+    networking.gke.io/managed-certificates: "cortex-showcase-cert"
+    kubernetes.io/ingress.allow-http: "true"
+    ingress.gcp.kubernetes.io/pre-shared-cert: "cortex-showcase-ssl"
+  labels:
+    app: cortex-showcase
+spec:
+  rules:
+  - host: showcase.cortex.example.com  # Replace with your domain
+    http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: cortex-showcase
+            port:
+              number: 80
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: cortex-showcase-cert
+  namespace: cortex-showcase
+spec:
+  domains:
+  - showcase.cortex.example.com  # Replace with your domain
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: cortex-showcase-backend-config
+  namespace: cortex-showcase
+spec:
+  healthCheck:
+    checkIntervalSec: 10
+    timeoutSec: 5
+    healthyThreshold: 2
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /
+    port: 80
+  cdn:
+    enabled: true
+    cachePolicy:
+      includeHost: true
+      includeProtocol: true
+      includeQueryString: false
+    negativeCaching: true
+    negativeCachingPolicy:
+    - code: 404
+      ttl: 120
+    - code: 500
+      ttl: 60
+  iap:
+    enabled: false
+  timeoutSec: 30
+  connectionDraining:
+    drainingTimeoutSec: 60
+  sessionAffinity:
+    affinityType: "NONE"
+  customRequestHeaders:
+    headers:
+    - "X-Client-Region:{client_region}"
+    - "X-Client-City:{client_city}"

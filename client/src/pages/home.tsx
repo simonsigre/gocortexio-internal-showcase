@@ -2,10 +2,11 @@ import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Project } from "@/lib/types";
 import { ProjectCard } from "@/components/project-card";
-import { FilterBar } from "@/components/filter-bar";
+import { FilterBar, SortOption } from "@/components/filter-bar";
 import { motion, AnimatePresence } from "framer-motion";
 import { subDays, isAfter, parseISO } from "date-fns";
 import { Loader2 } from "lucide-react";
+import { useVoting, getControveryScore, getHotScore } from "@/hooks/useVoting";
 
 export default function Home() {
   const [location] = useLocation();
@@ -25,6 +26,10 @@ export default function Home() {
     usecase: null,
     period: null
   });
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
+
+  // Initialize voting system
+  const { vote, getUserVote, getVoteCounts, getNetScore } = useVoting(projects);
 
   useEffect(() => {
     // Use BASE_URL to ensure correct path fetching in both dev and prod (GitHub Pages)
@@ -85,8 +90,9 @@ useEffect(() => {
 const uniqueAuthors = useMemo(() => Array.from(new Set(projects.map(p => p.author).filter(Boolean))), [projects]);
 const uniqueUsecases = useMemo(() => Array.from(new Set(projects.map(p => p.usecase).filter(Boolean))), [projects]);
 
-const filteredProjects = useMemo(() => {
-  return projects.filter(project => {
+const filteredAndSortedProjects = useMemo(() => {
+  // First, filter the projects
+  const filtered = projects.filter(project => {
     // Search filter - only apply if search is not empty
     if (search.trim()) {
       const searchLower = search.toLowerCase();
@@ -121,7 +127,52 @@ const filteredProjects = useMemo(() => {
 
     return true;
   });
-}, [projects, search, filters]);
+
+  // Then, sort the filtered projects
+  const sorted = [...filtered].sort((a, b) => {
+    switch (sortBy) {
+      case "top": {
+        // Sort by net score (upvotes - downvotes)
+        const scoreA = getNetScore(a.name);
+        const scoreB = getNetScore(b.name);
+        return scoreB - scoreA;
+      }
+      case "hot": {
+        // Reddit-style hot algorithm (score with time decay)
+        const hotA = getHotScore(getNetScore(a.name), a.date);
+        const hotB = getHotScore(getNetScore(b.name), b.date);
+        return hotB - hotA;
+      }
+      case "controversial": {
+        // Projects with similar upvotes and downvotes
+        const countsA = getVoteCounts(a.name);
+        const countsB = getVoteCounts(b.name);
+        const controversyA = getControveryScore(countsA.upvotes, countsA.downvotes);
+        const controversyB = getControveryScore(countsB.upvotes, countsB.downvotes);
+        return controversyB - controversyA;
+      }
+      case "most-upvoted": {
+        const countsA = getVoteCounts(a.name);
+        const countsB = getVoteCounts(b.name);
+        return countsB.upvotes - countsA.upvotes;
+      }
+      case "most-downvoted": {
+        const countsA = getVoteCounts(a.name);
+        const countsB = getVoteCounts(b.name);
+        return countsB.downvotes - countsA.downvotes;
+      }
+      case "newest":
+      default: {
+        // Sort by date (newest first)
+        const dateA = a.date ? parseISO(a.date) : new Date(0);
+        const dateB = b.date ? parseISO(b.date) : new Date(0);
+        return dateB.getTime() - dateA.getTime();
+      }
+    }
+  });
+
+  return sorted;
+}, [projects, search, filters, sortBy, getNetScore, getVoteCounts]);
 
 if (isLoading) {
   return (
@@ -158,11 +209,13 @@ return (
       setSearch={setSearch}
       filters={filters}
       setFilters={setFilters}
+      sortBy={sortBy}
+      setSortBy={setSortBy}
       uniqueAuthors={uniqueAuthors as string[]}
       uniqueUsecases={uniqueUsecases as string[]}
     />
 
-    {filteredProjects.length === 0 ? (
+    {filteredAndSortedProjects.length === 0 ? (
       <div className="text-center py-20 border border-dashed border-border rounded-lg bg-card/20">
         <p className="text-muted-foreground">No projects found matching your criteria.</p>
       </div>
@@ -172,8 +225,14 @@ return (
         className="grid grid-cols-1 gap-6"
       >
         <AnimatePresence>
-          {filteredProjects.map((project) => (
-            <ProjectCard key={project.name} project={project} />
+          {filteredAndSortedProjects.map((project) => (
+            <ProjectCard
+              key={project.name}
+              project={project}
+              userVote={getUserVote(project.name)}
+              netScore={getNetScore(project.name)}
+              onVote={vote}
+            />
           ))}
         </AnimatePresence>
       </motion.div>

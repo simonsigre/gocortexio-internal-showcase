@@ -27,6 +27,10 @@ run('tsx scripts/validate.ts');
 console.log('\n✨ Enriching data...');
 run('tsx scripts/enrich.ts');
 
+// 3.5. Generate sitemap
+console.log('\n🗺️  Generating sitemap...');
+run('tsx scripts/generate-sitemap.ts');
+
 // 4. Build with Vite
 console.log('\n📦 Building static site...');
 run('vite build');

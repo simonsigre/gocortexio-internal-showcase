@@ -42,7 +42,9 @@ export default function IncubationHub() {
                     maturityScore: 92,
                     champion: 'John Doe',
                     stars: 45,
-                    forks: 12
+                    forks: 12,
+                    upvotes: 0,
+                    downvotes: 0
                 },
                 {
                     name: 'XDR Mobile Threat Dashboard',
@@ -63,7 +65,9 @@ export default function IncubationHub() {
                     champion: 'Jane Smith',
                     reviewNotes: 'Needs additional documentation and deployment guide',
                     stars: 28,
-                    forks: 7
+                    forks: 7,
+                    upvotes: 0,
+                    downvotes: 0
                 },
                 {
                     name: 'XSOAR Playbook Framework',
@@ -83,7 +87,9 @@ export default function IncubationHub() {
                     maturityScore: 68,
                     champion: 'Bob Johnson',
                     stars: 67,
-                    forks: 23
+                    forks: 23,
+                    upvotes: 0,
+                    downvotes: 0
                 }
             ];
         }

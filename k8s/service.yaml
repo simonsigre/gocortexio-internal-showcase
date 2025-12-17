@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cortex-showcase
+  namespace: cortex-showcase
+  labels:
+    app: cortex-showcase
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/backend-config: '{"default": "cortex-showcase-backend-config"}'
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: cortex-showcase
+  sessionAffinity: None

@@ -114,79 +114,122 @@ export default function ArsenalPage() {
         </p>
       </motion.div>
 
-      {/* Release Selection Process */}
+      {/* Release Selection Process - Optimized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
       >
-        <Card className="bg-accent/10">
+        <Card className="bg-gradient-to-br from-primary/5 to-accent/10 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <GitBranch className="w-5 h-5 text-primary" />
-              Arsenal Release Selection Process
+              Arsenal Release Process
             </CardTitle>
             <CardDescription>
-              How projects are promoted from the community to official Arsenal releases
+              Community projects are curated through a rigorous review and incubation process
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-card rounded-lg p-6">
-              <pre className="text-xs overflow-x-auto">
-{`
-┌─────────────────┐
-│ Community       │
-│ Submissions     │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│ STAGE 1: Initial Review                                │
-│ • Documentation completeness check                      │
-│ • Code quality assessment                              │
-│ • Security validation                                  │
-└────────┬────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│ STAGE 2: Incubation Pipeline                          │
-│ • Nominated by champions                               │
-│ • Technical deep dive                                  │
-│ • Production readiness testing                         │
-│ • Maturity score calculation (0-100)                   │
-└────────┬────────────────────────────────────────────────┘
-         │
-         ▼
-    ┌───┴───┐
-    │Score? │
-    └───┬───┘
-        │
-  ┌─────┼─────┐
-  │     │     │
-< 70   70-85  > 85
-  │     │     │
-  ▼     ▼     ▼
-Needs  Ready  Promoted
-Work          to Arsenal
-  │            │
-  └────────────┴────────────────┐
-                                ▼
-                    ┌───────────────────────┐
-                    │ Arsenal Release       │
-                    │ • Version tagged      │
-                    │ • Distribution bundle │
-                    │ • Sales enablement    │
-                    └───────────────────────┘
-`}
-              </pre>
-              <div className="mt-4 p-4 bg-primary/10 border border-primary/30 rounded">
-                <h4 className="font-semibold mb-2">Maturity Score Criteria:</h4>
-                <ul className="text-sm space-y-1">
-                  <li>✓ Documentation (0-25 points)</li>
-                  <li>✓ Code Quality & Tests (0-25 points)</li>
-                  <li>✓ Production Usage (0-25 points)</li>
-                  <li>✓ Community Adoption (0-25 points)</li>
+            <div className="grid gap-4 md:grid-cols-3">
+              {/* Stage 1 */}
+              <div className="relative p-4 rounded-lg bg-card border border-border hover:border-primary/50 transition-colors">
+                <div className="absolute -top-3 left-4 bg-card px-2">
+                  <Badge variant="outline" className="border-blue-500 text-blue-500">Stage 1</Badge>
+                </div>
+                <h4 className="font-semibold mb-3 mt-2">Initial Review</h4>
+                <ul className="text-sm space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Documentation completeness</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Code quality assessment</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Security validation</span>
+                  </li>
                 </ul>
+              </div>
+
+              {/* Stage 2 */}
+              <div className="relative p-4 rounded-lg bg-card border border-border hover:border-primary/50 transition-colors">
+                <div className="absolute -top-3 left-4 bg-card px-2">
+                  <Badge variant="outline" className="border-yellow-500 text-yellow-500">Stage 2</Badge>
+                </div>
+                <h4 className="font-semibold mb-3 mt-2">Incubation Pipeline</h4>
+                <ul className="text-sm space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Champion nomination</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Technical deep dive</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Production testing</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Maturity scoring (0-100)</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Stage 3 */}
+              <div className="relative p-4 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/50">
+                <div className="absolute -top-3 left-4 bg-card px-2">
+                  <Badge className="bg-primary text-black">Stage 3</Badge>
+                </div>
+                <h4 className="font-semibold mb-3 mt-2">Arsenal Release</h4>
+                <ul className="text-sm space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Score ≥ 85 required</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Version tagged</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Distribution bundle</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Sales enablement</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Maturity Score Breakdown */}
+            <div className="mt-6 p-4 bg-card rounded-lg border border-primary/30">
+              <h4 className="font-semibold mb-3 text-sm flex items-center gap-2">
+                <Star className="w-4 h-4 text-primary" />
+                Maturity Score Criteria (0-100)
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="text-center p-2 rounded bg-accent/20">
+                  <div className="text-2xl font-bold text-primary">25</div>
+                  <div className="text-xs text-muted-foreground mt-1">Documentation</div>
+                </div>
+                <div className="text-center p-2 rounded bg-accent/20">
+                  <div className="text-2xl font-bold text-primary">25</div>
+                  <div className="text-xs text-muted-foreground mt-1">Code Quality</div>
+                </div>
+                <div className="text-center p-2 rounded bg-accent/20">
+                  <div className="text-2xl font-bold text-primary">25</div>
+                  <div className="text-xs text-muted-foreground mt-1">Production Usage</div>
+                </div>
+                <div className="text-center p-2 rounded bg-accent/20">
+                  <div className="text-2xl font-bold text-primary">25</div>
+                  <div className="text-xs text-muted-foreground mt-1">Community Adoption</div>
+                </div>
               </div>
             </div>
           </CardContent>

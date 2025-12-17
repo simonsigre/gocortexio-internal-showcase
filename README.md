@@ -123,6 +123,64 @@ graph LR
 
 ---
 
+## Unified Data Model
+
+### Single Source of Truth
+
+All projects, submissions, and showcase entries are **stored in one place**: `client/public/projects.json`. This eliminates data silos and ensures consistency.
+
+```mermaid
+graph TB
+    A[projects.json] --> B{publicationStatus}
+
+    B -->|draft| C[Not Visible]
+    B -->|pending-review| D[Admin Dashboard Only]
+    B -->|needs-work| E[Admin Dashboard Only]
+    B -->|published| F[Public Showcase]
+
+    A --> G{incubationStatus}
+    G -->|none| H[Regular Project]
+    G -->|nominated/in-review| I[Incubation Pipeline]
+    G -->|ready| J[Arsenal Release Candidate]
+    G -->|promoted| K[Arsenal Release]
+
+    style A fill:#00cd67,stroke:#333,stroke-width:2px
+    style F fill:#4CAF50
+    style K fill:#FF9800
+```
+
+### Project Lifecycle
+
+Projects flow through these states:
+
+1. **Draft** (`publicationStatus: "draft"`) - Initial creation, not visible anywhere
+2. **Pending Review** (`publicationStatus: "pending-review"`) - Submitted for admin review
+3. **Needs Work** (`publicationStatus: "needs-work"`) - Admin requested changes
+4. **Published** (`publicationStatus: "published"`, `status: "active"`) - Live on showcase
+
+Separately, projects can enter the **Incubation Pipeline**:
+
+1. **Nominated** (`incubationStatus: "nominated"`) - Nominated for promotion
+2. **In Review** (`incubationStatus: "in-review"`) - Being evaluated
+3. **Ready** (`incubationStatus: "ready"`, `maturityScore ≥ 85`) - Ready for Arsenal
+4. **Promoted** (`incubationStatus: "promoted"`) - Included in Arsenal release
+
+### Data Consistency
+
+- **Total Projects** = All records in `projects.json`
+- **Total Submissions** = Same as total projects (unified)
+- **Showcase Projects** = Projects with `publicationStatus === "published"`
+- **Admin Dashboard** = Sees all projects, filtered by `publicationStatus`
+- **Incubation Projects** = Projects with `incubationStatus !== "none"`
+
+This design ensures:
+- ✅ No duplicate records
+- ✅ Single point of update
+- ✅ Consistent statistics across all views
+- ✅ Clear project lifecycle tracking
+
+---
+
 ## Directory Structure
 
 ```
@@ -310,16 +368,17 @@ sequenceDiagram
 ---
 
 #### 3. **Admin** (`/admin`) - `client/src/pages/admin.tsx`
-**Purpose:** JSON merge utility for managing project submissions
+**Purpose:** Unified project management dashboard
 
 **Features:**
-- Two-panel JSON editor
-- Panel 1: Existing projects (from `projects.json`)
-- Panel 2: New projects (paste submission JSON)
-- Merge button (combines arrays, validates schema)
-- Download merged JSON
-- Copy merged JSON to clipboard
-- No authentication (client-side only)
+- **Dashboard Overview** - Stats cards showing pending, needs work, incubation, and published counts
+- **Submission Review** - Manage projects by publication status (draft, pending-review, needs-work, published)
+- **Incubation Pipeline** - Track projects being promoted to Arsenal release
+- **Arsenal Release Builder** - Create versioned Arsenal releases
+- **Announcements** - Create markdown announcements with diagram support
+- **Expandable Project Details** - View full project metadata in submission cards
+- **Action Handlers** - Approve, reject, or request changes on submissions
+- No authentication (client-side only, manual JSON updates)
 
 **Workflow:**
 ```mermaid
@@ -357,34 +416,168 @@ graph LR
 
 ### Prerequisites
 
-- **Node.js** 20+ (LTS recommended)
+Check that you have the required software:
+
+```bash
+# Check Node.js version (need 20+)
+node --version
+
+# Check npm version (need 9+)
+npm --version
+
+# Check git
+git --version
+```
+
+**Required:**
+- **Node.js** 20+ (LTS recommended) - [Download here](https://nodejs.org/)
 - **npm** 9+ (comes with Node.js)
-- **Git** (for cloning)
+- **Git** - [Download here](https://git-scm.com/)
+
+**Optional:**
+- **Playwright** (for testing) - Installed in step 3 below
 
 ### Installation
 
+#### Step 1: Clone Repository
+
 ```bash
-# Clone repository
+# HTTPS (recommended for read access)
 git clone https://github.com/[username]/pilot-gocortexio-showcase.git
 cd pilot-gocortexio-showcase
 
-# Install dependencies
-npm install
-
-# Install Playwright browsers (for testing)
-npx playwright install
+# OR SSH (if you have SSH keys configured)
+git clone git@github.com:[username]/pilot-gocortexio-showcase.git
+cd pilot-gocortexio-showcase
 ```
+
+#### Step 2: Install Dependencies
+
+```bash
+# Install all npm packages (takes 1-2 minutes)
+npm install
+```
+
+**Expected output:**
+```
+added 1200+ packages in 45s
+```
+
+If you see errors here, see [Troubleshooting](#troubleshooting) section below.
+
+#### Step 3: Install Playwright (Optional - for testing only)
+
+```bash
+# Install Playwright browsers (takes 2-3 minutes)
+npx playwright install
+
+# OR install with system dependencies
+npx playwright install --with-deps
+```
+
+**Skip this step if you only want to run the dev server.**
 
 ### Quick Start
 
-```bash
-# Start development server
-npm run dev:client
+#### Start Development Server
 
-# Open browser to http://localhost:5173
+```bash
+# CLIENT ONLY - NO BACKEND EXISTS
+npm run dev:client
 ```
 
-You should see the GoCortex Showcase homepage with project cards.
+**Expected output:**
+```
+  VITE v7.1.12  ready in 155 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://192.168.1.x:5173/
+```
+
+#### Open in Browser
+
+Navigate to [http://localhost:5173](http://localhost:5173)
+
+You should see:
+- ✅ GoCortex Showcase homepage
+- ✅ Grid of project cards
+- ✅ Navigation header
+- ✅ Filter bar
+
+---
+
+### ⚠️ CRITICAL: Common Mistake
+
+**❌ DO NOT RUN:**
+```bash
+npm run dev  # This will FAIL - no backend exists
+```
+
+**Error you'll see:**
+```
+[server] Error: Cannot find module 'server/index.ts'
+```
+
+**✅ ALWAYS USE:**
+```bash
+npm run dev:client  # This works - client-side only
+```
+
+**Why?**
+- This is a **pure static site** (no Express server, no database, no backend API)
+- The `npm run dev` script is leftover from a template and tries to start a non-existent server
+- All data comes from `client/public/projects.json` loaded in the browser
+
+---
+
+### Verify Installation
+
+#### Test 1: Dev Server Loads
+```bash
+# Start dev server
+npm run dev:client
+
+# In another terminal, test the server
+curl http://localhost:5173
+```
+
+**Expected:** HTML content (not an error)
+
+#### Test 2: Projects Load
+```bash
+# Check projects.json exists and is valid
+cat client/public/projects.json | head -20
+```
+
+**Expected:** Valid JSON array with project objects
+
+#### Test 3: TypeScript Compiles
+```bash
+# Run TypeScript compiler check
+npm run check
+```
+
+**Expected:** No errors (or only errors in incubation-hub.tsx which is not used)
+
+#### Test 4: Build Works
+```bash
+# Build production bundle
+npm run build
+```
+
+**Expected:**
+```
+✓ built in 4.96s
+✅ Build completed successfully!
+```
+
+#### Test 5: Run Smoke Tests (Optional)
+```bash
+# Quick smoke test suite
+npm run test:smoke
+```
+
+**Expected:** All tests pass (takes < 2 minutes)
 
 ---
 
@@ -440,18 +633,41 @@ npx tsx scripts/enrich.ts   # Fetch GitHub API stats (requires GITHUB_TOKEN)
 **Project Schema:**
 ```typescript
 {
+  // Core Fields
   name: string;              // Required
   description: string;       // Required, min 10 chars
   status: "active" | "development" | "beta" | "deprecated";
   link: string;              // Required, valid URL
   language: string;          // Required
-  repo?: string;             // Optional, "owner/repo" format
-  githubApi: boolean;        // Enable GitHub API enrichment
-  product?: "Cortex XSIAM" | "Cortex XDR" | "Cortex XSOAR" | "Prisma Cloud" | "Strata";
   author: string;            // Required
+  date: string;              // YYYY-MM-DD format
+
+  // Optional Metadata
+  repo?: string;             // Optional, "owner/repo" format
+  githubApi: boolean;        // Enable GitHub API enrichment (default: false)
+  product?: "Cortex XSIAM" | "Cortex XDR" | "Cortex XSOAR" | "Prisma Cloud" | "Strata";
   theatre?: "NAM" | "JAPAC" | "EMEA" | "LATAM" | "Global";
   usecase?: string;
-  date: string;              // YYYY-MM-DD format
+
+  // Publication & Review (NEW - Unified Data Model)
+  publicationStatus?: "draft" | "pending-review" | "needs-work" | "published";  // Default: "draft"
+  submittedBy?: string;      // Email of submitter
+  submittedAt?: string;      // ISO timestamp
+  reviewNotes?: string;      // Admin feedback
+
+  // Incubation Pipeline (NEW)
+  incubationStatus?: "none" | "nominated" | "in-review" | "ready" | "promoted";  // Default: "none"
+  maturityScore?: number;    // 0-100 readiness score
+  promotionTarget?: "pre-sales" | "regional-nam" | "regional-emea" | "regional-japac" | "global";
+  champion?: string;         // Project champion name
+
+  // GitHub Enriched Data (auto-populated by CI/CD)
+  stars?: number;
+  forks?: number;
+  lastUpdated?: string;
+  license?: string;
+
+  // Media
   media?: {
     type: "image" | "youtube";
     url: string;
@@ -729,42 +945,515 @@ Ensure your project:
 
 ## Troubleshooting
 
-### Common Issues
+### Installation Issues
 
-#### Port 5173 Already in Use
+#### Issue 1: `npm install` Fails
+
+**Symptoms:**
+```
+npm ERR! code EINTEGRITY
+npm ERR! sha512-... integrity checksum failed
+```
+
+**Solutions:**
+
 ```bash
-# Kill process on port 5173
-lsof -ti:5173 | xargs kill
+# Solution A: Clear npm cache
+npm cache clean --force
+npm install
 
-# Or use a different port
+# Solution B: Delete lock file and reinstall
+rm package-lock.json
+npm install
+
+# Solution C: Use different registry
+npm install --registry https://registry.npmjs.org/
+
+# Solution D: Update npm itself
+npm install -g npm@latest
+npm install
+```
+
+#### Issue 2: Node Version Too Old
+
+**Symptoms:**
+```
+error This project requires Node.js >=20.0.0
+```
+
+**Solution:**
+
+```bash
+# Check current version
+node --version
+
+# Install Node 20+ from https://nodejs.org/
+# OR use nvm (Node Version Manager)
+nvm install 20
+nvm use 20
+node --version  # Should show v20.x.x
+```
+
+#### Issue 3: Permission Errors (macOS/Linux)
+
+**Symptoms:**
+```
+npm ERR! Error: EACCES: permission denied
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Fix npm permissions (recommended)
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+# Solution B: Use sudo (NOT recommended, but works)
+sudo npm install
+
+# Solution C: Fix node_modules ownership
+sudo chown -R $USER:$GROUP ~/.npm
+sudo chown -R $USER:$GROUP node_modules
+```
+
+---
+
+### Development Server Issues
+
+#### Issue 4: `npm run dev` Fails with "Cannot find module 'server/index.ts'"
+
+**THIS IS EXPECTED!**
+
+**Symptoms:**
+```bash
+npm run dev
+# [server] Error: Cannot find module '/path/to/server/index.ts'
+# [server] npm run dev:server exited with code 1
+```
+
+**Solution:**
+```bash
+# DON'T use npm run dev
+# USE THIS INSTEAD:
+npm run dev:client
+```
+
+**Why:** This is a pure client-side application. There is no backend server. The `npm run dev` script is broken and should not be used.
+
+#### Issue 5: Port 5173 Already in Use
+
+**Symptoms:**
+```
+Port 5173 is in use, trying another one...
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Kill existing process (macOS/Linux)
+lsof -ti:5173 | xargs kill -9
+
+# Solution B: Kill existing process (Windows)
+netstat -ano | findstr :5173
+taskkill /PID <PID> /F
+
+# Solution C: Use different port
 npm run dev:client -- --port 3000
+
+# Solution D: Check what's using the port
+lsof -i:5173  # macOS/Linux
+netstat -ano | findstr :5173  # Windows
 ```
 
-#### Tests Failing
+#### Issue 6: Browser Shows "Cannot GET /"
+
+**Symptoms:**
+- Dev server starts but browser shows blank page or error
+- Console shows 404 errors
+
+**Solutions:**
+
 ```bash
-# Re-install Playwright browsers
-npx playwright install --with-deps
+# Check if index.html exists
+ls client/index.html
 
-# Run with debug mode
-npm run test:debug
+# Restart dev server with clearing cache
+rm -rf client/.vite
+npm run dev:client
 
-# Check dev server is running
-curl http://localhost:5173
+# Check Vite config
+cat vite.config.ts | grep root
+# Should show: root: 'client'
 ```
 
-#### Build Failing
+#### Issue 7: Hot Reload Not Working
+
+**Symptoms:**
+- Changes to files don't show in browser
+- Need to manually refresh
+
+**Solutions:**
+
 ```bash
-# Clear cache and rebuild
-rm -rf node_modules dist
+# Solution A: Restart dev server
+# Press Ctrl+C, then run again
+npm run dev:client
+
+# Solution B: Clear Vite cache
+rm -rf node_modules/.vite
+npm run dev:client
+
+# Solution C: Check file watchers (Linux)
+# Increase inotify watches limit
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+---
+
+### Build Issues
+
+#### Issue 8: TypeScript Errors on Build
+
+**Symptoms:**
+```bash
+npm run check
+# client/src/pages/incubation-hub.tsx(24,9): error TS2769
+```
+
+**Solution:**
+
+These errors are **EXPECTED** in `incubation-hub.tsx` which is not currently used. To verify only critical files:
+
+```bash
+# Check main files compile
+npx tsc --noEmit client/src/pages/home.tsx
+npx tsc --noEmit client/src/pages/admin.tsx
+npx tsc --noEmit client/src/pages/submit.tsx
+
+# Full build should still work
+npm run build
+```
+
+#### Issue 9: Build Fails with Memory Error
+
+**Symptoms:**
+```
+FATAL ERROR: Reached heap limit Allocation failed
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Increase Node memory
+NODE_OPTIONS="--max-old-space-size=4096" npm run build
+
+# Solution B: Clear all caches
+rm -rf node_modules dist client/.vite
 npm install
 npm run build
 ```
 
-#### GitHub Pages Not Updating
-1. Check GitHub Actions workflow logs
-2. Verify deployment succeeded
-3. Clear browser cache
-4. Wait 1-2 minutes for CDN propagation
+#### Issue 10: Vite Build Fails
+
+**Symptoms:**
+```
+Error: Failed to parse source for import analysis
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Update Vite
+npm install vite@latest --save-dev
+npm run build
+
+# Solution B: Clear dist and rebuild
+rm -rf dist
+npm run build
+
+# Solution C: Check vite.config.ts syntax
+npm run check
+```
+
+---
+
+### Testing Issues
+
+#### Issue 11: Playwright Tests Fail
+
+**Symptoms:**
+```bash
+npm test
+# Error: browserType.launch: Executable doesn't exist
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Install Playwright browsers
+npx playwright install
+
+# Solution B: Install with system dependencies
+npx playwright install --with-deps
+
+# Solution C: Install specific browser
+npx playwright install chromium
+
+# Solution D: Check Playwright version
+npx playwright --version
+npm list @playwright/test
+```
+
+#### Issue 12: Tests Timeout
+
+**Symptoms:**
+```
+Timeout of 30000ms exceeded
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Increase timeout in playwright.config.ts
+# Edit timeout: 60000
+
+# Solution B: Run with more time
+npx playwright test --timeout=60000
+
+# Solution C: Run only smoke tests
+npm run test:smoke
+
+# Solution D: Run with debug
+npm run test:debug
+```
+
+#### Issue 13: Tests Can't Connect to Dev Server
+
+**Symptoms:**
+```
+Error: page.goto: net::ERR_CONNECTION_REFUSED
+```
+
+**Solutions:**
+
+```bash
+# Solution A: Ensure dev server is running
+# In one terminal:
+npm run dev:client
+
+# In another terminal:
+npm test
+
+# Solution B: Check port in playwright.config.ts
+# Should match: use: { baseURL: 'http://localhost:5173' }
+
+# Solution C: Wait for dev server to be ready
+# Give it 10-15 seconds after starting
+```
+
+---
+
+### Data & Content Issues
+
+#### Issue 14: Projects Not Loading
+
+**Symptoms:**
+- Homepage shows "No projects found"
+- Console error: "Failed to fetch"
+
+**Solutions:**
+
+```bash
+# Solution A: Check projects.json exists and is valid
+cat client/public/projects.json | python3 -m json.tool
+
+# Solution B: Check projects.json is not empty
+wc -l client/public/projects.json
+# Should be > 10 lines
+
+# Solution C: Validate JSON syntax
+npx jsonlint client/public/projects.json
+
+# Solution D: Check file permissions
+ls -la client/public/projects.json
+# Should be readable (644 or similar)
+```
+
+#### Issue 15: Images Not Loading
+
+**Symptoms:**
+- Project cards show broken image icons
+- 404 errors in console for images
+
+**Solutions:**
+
+```bash
+# Check image path in projects.json
+# Images should be in client/public/ or external URLs
+
+# For local images:
+ls client/public/*.png
+ls client/public/images/*.png
+
+# Update projects.json with correct paths:
+# "media": { "url": "/image.png" }  # For files in public/
+# "media": { "url": "https://..." }  # For external images
+```
+
+---
+
+### GitHub Deployment Issues
+
+#### Issue 16: GitHub Pages Not Updating
+
+**Symptoms:**
+- Pushed to main but site doesn't update
+- Changes not visible after deployment
+
+**Solutions:**
+
+```bash
+# Step 1: Check GitHub Actions workflow
+# Go to: https://github.com/[user]/[repo]/actions
+# Look for failed workflows (red X)
+
+# Step 2: Check workflow logs
+# Click on failed workflow → View details
+# Common errors:
+#   - "No GITHUB_TOKEN" → Check repo permissions
+#   - "Build failed" → Check error logs
+#   - "Deploy failed" → Check Pages settings
+
+# Step 3: Verify Pages is enabled
+# Settings → Pages → Source: GitHub Actions
+
+# Step 4: Clear browser cache
+# Chrome: Ctrl+Shift+R (force reload)
+# Or: Open in incognito/private mode
+
+# Step 5: Wait for CDN propagation
+# Can take 1-5 minutes for changes to appear
+```
+
+#### Issue 17: GitHub Actions Workflow Fails
+
+**Symptoms:**
+```
+Run npm run build
+Error: Command failed with exit code 1
+```
+
+**Solutions:**
+
+```bash
+# Step 1: Test build locally
+npm run build
+# Fix any errors that appear
+
+# Step 2: Check if GITHUB_TOKEN is needed
+# For GitHub API enrichment, ensure:
+# - Workflow has: permissions: contents: read
+
+# Step 3: Check Node version in workflow
+# .github/workflows/deploy.yaml should have:
+# - uses: actions/setup-node@v4
+#   with:
+#     node-version: '20'
+
+# Step 4: Check if workflow file is valid
+npx yaml-lint .github/workflows/deploy.yaml
+```
+
+---
+
+### Performance Issues
+
+#### Issue 18: Slow Build Times
+
+**Symptoms:**
+- Build takes > 5 minutes
+- High CPU/memory usage
+
+**Solutions:**
+
+```bash
+# Solution A: Clear caches
+rm -rf node_modules/.vite dist
+npm run build
+
+# Solution B: Disable source maps (faster builds)
+# Edit vite.config.ts:
+# build: { sourcemap: false }
+
+# Solution C: Reduce concurrent operations
+# Edit vite.config.ts:
+# build: { rollupOptions: { maxParallelFileOps: 2 } }
+
+# Solution D: Check for circular dependencies
+npx madge --circular client/src
+```
+
+#### Issue 19: Large Bundle Size
+
+**Symptoms:**
+```
+(!) Some chunks are larger than 500 kB after minification
+```
+
+**This is a WARNING, not an error.**
+
+**To optimize:**
+
+```bash
+# Analyze bundle
+npm run build
+# Check dist/public/assets/*.js file sizes
+
+# Solution A: Enable code splitting
+# Already configured in vite.config.ts
+
+# Solution B: Lazy load heavy components
+# Use React.lazy() for large pages
+
+# Solution C: Check bundle composition
+npx vite-bundle-visualizer
+```
+
+---
+
+### Getting Help
+
+If none of these solutions work:
+
+1. **Check existing issues**: [GitHub Issues](https://github.com/[username]/pilot-gocortexio-showcase/issues)
+2. **Create new issue**: Include error messages, OS, Node version, steps to reproduce
+3. **Review documentation**: See [CLAUDE.md](CLAUDE.md) for development guidelines
+4. **Check workflows**: Look at [.github/workflows/](.github/workflows/) for CI/CD configs
+
+**Useful Debug Commands:**
+
+```bash
+# System info
+node --version
+npm --version
+npx playwright --version
+
+# Project info
+npm list --depth=0
+git status
+git log --oneline -5
+
+# Check file structure
+ls -la client/public/
+ls -la client/src/pages/
+
+# Check running processes
+lsof -i:5173  # macOS/Linux
+netstat -ano | findstr :5173  # Windows
+```
 
 ---
 
@@ -783,6 +1472,35 @@ npm run build
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Playwright](https://playwright.dev/)
 - [shadcn/ui](https://ui.shadcn.com/)
+
+---
+
+## Security
+
+[![Security Audit](https://github.com/simonsigre/pilot-gocortexio-showcase/actions/workflows/security-audit.yaml/badge.svg)](https://github.com/simonsigre/pilot-gocortexio-showcase/actions/workflows/security-audit.yaml)
+
+### Security Measures
+
+- ✅ **Dependabot:** Enabled - Weekly dependency scans
+- ✅ **Secret Scanning:** Enabled
+- ✅ **NPM Audit:** 0 vulnerabilities
+- ✅ **HTTPS:** Enforced via GitHub Pages/Kubernetes
+- ✅ **CSP Headers:** Configured in nginx
+- ✅ **Data Backups:** Automated daily backups
+- ✅ **Disaster Recovery:** Documented procedures
+
+### Reporting Vulnerabilities
+
+**⚠️ DO NOT open public issues for security vulnerabilities.**
+
+See [SECURITY.md](./SECURITY.md) for our security policy and how to report vulnerabilities.
+
+### Related Documentation
+
+- [SECURITY.md](./SECURITY.md) - Security policy and vulnerability reporting
+- [DISASTER_RECOVERY.md](./DISASTER_RECOVERY.md) - Data recovery procedures
+- [GAP_CLOSURE_PLAN.md](./GAP_CLOSURE_PLAN.md) - Production readiness plan
+- [MVP_GAP_ANALYSIS.md](./MVP_GAP_ANALYSIS.md) - Gap analysis for MVP release
 
 ---
 

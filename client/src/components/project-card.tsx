@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon, Star, GitFork, Scale, Eye } from "lucide-react";
+import { ExternalLink, Github, ChevronDown, ChevronUp, Play, Image as ImageIcon, Star, GitFork, Scale, Eye, ArrowUp, ArrowDown } from "lucide-react";
 import { motion } from "framer-motion";
+import { VoteType } from "@/hooks/useVoting";
 
 const STATUS_COLOURS = {
   active: "text-[#00cd67] border-[#00cd67] bg-[#00cd67]/10",
@@ -47,9 +48,28 @@ function getProductColor(product: string): string {
   return colorMap[product] || 'bg-secondary';
 }
 
-export function ProjectCard({ project }: { project: Project }) {
+interface ProjectCardProps {
+  project: Project;
+  userVote?: VoteType;
+  netScore?: number;
+  onVote?: (projectName: string, voteType: VoteType) => void;
+}
+
+export function ProjectCard({ project, userVote = 0, netScore = 0, onVote }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const statusClass = STATUS_COLOURS[project.status as keyof typeof STATUS_COLOURS] || STATUS_COLOURS.development;
+
+  const handleUpvote = () => {
+    if (onVote) {
+      onVote(project.name, 1);
+    }
+  };
+
+  const handleDownvote = () => {
+    if (onVote) {
+      onVote(project.name, -1);
+    }
+  };
 
   return (
     <motion.div
@@ -58,6 +78,42 @@ export function ProjectCard({ project }: { project: Project }) {
       className="group"
     >
       <Card className="bg-card border-border overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,205,103,0.1)] flex flex-col md:flex-row h-full">
+        {/* Voting Area */}
+        <div className="flex flex-row md:flex-col items-center justify-center gap-1 p-3 md:p-2 md:w-16 bg-black/10 border-b md:border-b-0 md:border-r border-border">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "h-8 w-8 p-0 hover:bg-primary/20 transition-all",
+              userVote === 1 && "text-primary bg-primary/10 hover:bg-primary/20"
+            )}
+            onClick={handleUpvote}
+            title="Upvote"
+          >
+            <ArrowUp className={cn("w-5 h-5", userVote === 1 && "fill-primary")} />
+          </Button>
+          <div className={cn(
+            "text-sm font-bold font-mono px-2 md:px-0",
+            netScore > 0 && "text-primary",
+            netScore < 0 && "text-red-400",
+            netScore === 0 && "text-muted-foreground"
+          )}>
+            {netScore > 0 ? `+${netScore}` : netScore}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "h-8 w-8 p-0 hover:bg-destructive/20 transition-all",
+              userVote === -1 && "text-destructive bg-destructive/10 hover:bg-destructive/20"
+            )}
+            onClick={handleDownvote}
+            title="Downvote"
+          >
+            <ArrowDown className={cn("w-5 h-5", userVote === -1 && "fill-destructive")} />
+          </Button>
+        </div>
+
         {/* Visual Area */}
         <div className="w-full md:w-[280px] h-[200px] md:h-auto bg-black/20 shrink-0 border-b md:border-b-0 md:border-r border-border relative overflow-hidden group-hover:border-primary/50 transition-colors">
           {project.media ? (

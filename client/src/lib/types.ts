@@ -83,7 +83,11 @@ export const projectSchema = z.object({
     url: z.string(),
     thumbnail: z.string().optional(),
     caption: z.string().optional()
-  })).optional()
+  })).optional(),
+
+  // Voting System Fields (managed client-side)
+  upvotes: z.number().default(0),
+  downvotes: z.number().default(0),
 });
 
 export type Project = z.infer<typeof projectSchema>;

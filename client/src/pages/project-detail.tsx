@@ -8,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { ReadmeViewer } from '@/components/readme-viewer';
 import { MediaGallery } from '@/components/media-gallery';
-import { ProjectGraph } from '@/components/project-graph';
 import { Project } from '@/lib/types';
 import { formatDate, formatNumber } from '@/lib/utils';
 import { extractSections, createFallbackContent } from '@/lib/content-extraction';
@@ -150,13 +149,12 @@ export default function ProjectDetail() {
         <div className="lg:col-span-2 space-y-8">
           {/* Tabs for different content sections */}
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="readme">README</TabsTrigger>
               <TabsTrigger value="setup">Setup</TabsTrigger>
               <TabsTrigger value="deployment">Deployment</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
-              <TabsTrigger value="relationships" className="hidden lg:block">Relationships</TabsTrigger>
               <TabsTrigger value="troubleshooting" className="hidden lg:block">Troubleshooting</TabsTrigger>
               <TabsTrigger value="media" className="hidden lg:block">Media</TabsTrigger>
             </TabsList>
@@ -380,14 +378,6 @@ export default function ProjectDetail() {
                   )}
                 </CardContent>
               </Card>
-            </TabsContent>
-
-            <TabsContent value="relationships">
-              <ProjectGraph
-                currentProject={project}
-                allProjects={projects || []}
-                showRelated={true}
-              />
             </TabsContent>
 
             <TabsContent value="troubleshooting">

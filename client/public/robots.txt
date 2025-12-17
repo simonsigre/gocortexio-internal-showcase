@@ -1,0 +1,27 @@
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow admin area
+User-agent: *
+Disallow: /#/admin
+
+# Sitemap location
+Sitemap: https://simonsigre.github.io/pilot-gocortexio-showcase/sitemap.xml
+
+# Crawl rate (optional - for polite bots)
+Crawl-delay: 1
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block malicious bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /

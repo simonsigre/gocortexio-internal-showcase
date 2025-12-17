@@ -251,7 +251,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="pending" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="pending">
             Pending Review
             <Badge variant="secondary" className="ml-2">{pendingReview.length}</Badge>
@@ -259,6 +259,10 @@ export default function AdminPage() {
           <TabsTrigger value="needs-work">
             Needs Work
             <Badge variant="outline" className="ml-2">{needsWork.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="published">
+            Published
+            <Badge variant="outline" className="ml-2">{published.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="incubation">
             Incubation
@@ -320,6 +324,64 @@ export default function AdminPage() {
               <CardContent className="py-12 text-center text-muted-foreground">
                 <FileEdit className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 No projects need work
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        {/* Published Projects Tab - For Management */}
+        <TabsContent value="published" className="space-y-4">
+          <div className="mb-4 p-4 bg-primary/10 border border-primary/30 rounded-lg">
+            <h4 className="font-semibold mb-2">Published Projects Management</h4>
+            <p className="text-sm text-muted-foreground">
+              Manage all published projects. You can unpublish projects to remove them from the showcase,
+              or edit their details. All changes require manual updates to projects.json.
+            </p>
+          </div>
+
+          {published.map((project) => (
+            <PublishedProjectCard
+              key={project.name}
+              project={project}
+              onUnpublish={(projectName: string) => {
+                toast({
+                  title: "Unpublish Project",
+                  description: (
+                    <div className="space-y-2">
+                      <p>Update the project in projects.json:</p>
+                      <pre className="bg-accent p-2 rounded text-xs overflow-auto max-h-40">
+                        {JSON.stringify({ name: projectName, publicationStatus: 'draft' }, null, 2)}
+                      </pre>
+                    </div>
+                  ),
+                  variant: "destructive"
+                });
+              }}
+              onEdit={(projectName: string) => {
+                const proj = allProjects.find(p => p.name === projectName);
+                if (!proj) return;
+
+                toast({
+                  title: "Edit Project",
+                  description: (
+                    <div className="space-y-2">
+                      <p>Edit this project in projects.json:</p>
+                      <pre className="bg-accent p-2 rounded text-xs overflow-auto max-h-60">
+                        {JSON.stringify(proj, null, 2)}
+                      </pre>
+                      <p className="text-xs">Copy the JSON above, make your changes, and update projects.json</p>
+                    </div>
+                  )
+                });
+              }}
+            />
+          ))}
+
+          {published.length === 0 && (
+            <Card className="border-dashed">
+              <CardContent className="py-12 text-center text-muted-foreground">
+                <CheckCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                No published projects
               </CardContent>
             </Card>
           )}
@@ -1339,5 +1401,80 @@ function ArsenalReleaseDialog() {
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+// Published Project Card Component
+function PublishedProjectCard({ project, onUnpublish, onEdit }: {
+  project: Project;
+  onUnpublish: (projectName: string) => void;
+  onEdit: (projectName: string) => void;
+}) {
+  const [isUnpublishDialogOpen, setIsUnpublishDialogOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="border-green-500/30 bg-green-500/5 hover:shadow-lg transition-all">
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-xl">{project.name}</CardTitle>
+                <Badge variant="outline" className="border-green-500 text-green-500">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  PUBLISHED
+                </Badge>
+              </div>
+              <CardDescription className="flex items-center gap-2">
+                <span className="font-medium">{project.author}</span>
+                <span>•</span>
+                <span>{project.product || 'Cortex XSIAM'}</span>
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-accent/20 p-3 rounded border border-border">
+            <p className="text-sm leading-relaxed line-clamp-2">{project.description}</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 pt-3 border-t border-border">
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => onEdit(project.name)}>
+              <FileEdit className="w-4 h-4" />
+              Edit
+            </Button>
+
+            <Button variant="destructive" size="sm" className="gap-2 ml-auto" onClick={() => setIsUnpublishDialogOpen(true)}>
+              <XCircle className="w-4 h-4" />
+              Unpublish
+            </Button>
+
+            <Dialog open={isUnpublishDialogOpen} onOpenChange={setIsUnpublishDialogOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Unpublish Project</DialogTitle>
+                  <DialogDescription>
+                    Remove "{project.name}" from the showcase?
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex gap-2 justify-end">
+                  <Button variant="outline" onClick={() => setIsUnpublishDialogOpen(false)}>Cancel</Button>
+                  <Button variant="destructive" onClick={() => {
+                      onUnpublish(project.name);
+                      setIsUnpublishDialogOpen(false);
+                    }}>
+                    Confirm
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

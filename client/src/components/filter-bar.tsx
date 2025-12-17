@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { PRODUCTS, THEATRES } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
+export type SortOption = "newest" | "top" | "hot" | "controversial" | "most-upvoted" | "most-downvoted";
+
 interface FilterBarProps {
   search: string;
   setSearch: (value: string) => void;
@@ -16,16 +18,19 @@ interface FilterBarProps {
     period: string | null;
   };
   setFilters: (filters: any) => void;
+  sortBy: SortOption;
+  setSortBy: (sort: SortOption) => void;
   uniqueAuthors: string[];
   uniqueUsecases: string[];
 }
 
-export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthors, uniqueUsecases }: FilterBarProps) {
+export function FilterBar({ search, setSearch, filters, setFilters, sortBy, setSortBy, uniqueAuthors, uniqueUsecases }: FilterBarProps) {
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
   const clearFilters = () => {
     setFilters({ product: null, theatre: null, author: null, usecase: null, period: null });
     setSearch("");
+    setSortBy("newest");
   };
 
   return (
@@ -42,6 +47,20 @@ export function FilterBar({ search, setSearch, filters, setFilters, uniqueAuthor
         </div>
         
         <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+          <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+            <SelectTrigger className="w-[160px] bg-card/50 border-border">
+              <SelectValue placeholder="Sort By" />
+            </SelectTrigger>
+            <SelectContent className="bg-white text-black">
+              <SelectItem value="newest">Newest First</SelectItem>
+              <SelectItem value="top">Top Rated</SelectItem>
+              <SelectItem value="hot">Hot</SelectItem>
+              <SelectItem value="controversial">Controversial</SelectItem>
+              <SelectItem value="most-upvoted">Most Upvoted</SelectItem>
+              <SelectItem value="most-downvoted">Most Downvoted</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Select value={filters.period || "all"} onValueChange={(v) => setFilters({...filters, period: v === "all" ? null : v})}>
              <SelectTrigger className="w-[140px] bg-card/50 border-border">
                <SelectValue placeholder="Period" />

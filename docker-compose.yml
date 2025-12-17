@@ -1,96 +1,137 @@
 version: "3.8"
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:16-alpine
-    container_name: cortex-arsenal-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: cortex_arsenal
-      POSTGRES_USER: arsenal_user
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-dev_password_change_in_prod}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U arsenal_user -d cortex_arsenal"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - arsenal-network
-
-  # Backend API Service
-  api:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: cortex-arsenal-api
-    restart: unless-stopped
-    environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      DATABASE_URL: postgresql://arsenal_user:${DB_PASSWORD:-dev_password_change_in_prod}@postgres:5432/cortex_arsenal
-      PORT: 3001
-      JWT_SECRET: ${JWT_SECRET:-dev_secret_change_in_prod}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
-    ports:
-      - "3001:3001"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./server:/app
-      - /app/node_modules
-      - uploaded_files:/app/uploads
-    networks:
-      - arsenal-network
-
-  # Frontend (Vite Dev Server)
-  frontend:
+  # GoCortex Showcase - Production-ready static site
+  gocortex-showcase:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
-    container_name: cortex-arsenal-frontend
+      dockerfile: Dockerfile
+      args:
+        BASE_PATH: ${BASE_PATH:-/}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    image: gocortex-showcase:latest
+    container_name: gocortex-showcase
     restart: unless-stopped
-    environment:
-      VITE_API_URL: http://localhost:3001
     ports:
-      - "5173:5173"
-    volumes:
-      - ./client:/app/client
-      - /app/client/node_modules
-    networks:
-      - arsenal-network
-    command: npm run dev
-
-  # pgAdmin (Optional - for database management)
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: cortex-arsenal-pgadmin
-    restart: unless-stopped
+      - "${PORT:-8080}:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@cortex-arsenal.local
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.gocortex.description=GoCortex Showcase - Static Site Generator"
+      - "com.gocortex.version=1.0"
+      - "com.gocortex.vendor=Palo Alto Networks"
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:size=10M
+      - /var/run:size=10M
+      - /tmp:size=10M
     networks:
-      - arsenal-network
-    profiles:
-      - tools
-
-volumes:
-  postgres_data:
-    driver: local
-  uploaded_files:
-    driver: local
+      - gocortex-net
 
 networks:
-  arsenal-network:
+  gocortex-net:
     driver: bridge
+
+# NOTE: This project is a PURE CLIENT-SIDE APPLICATION
+# The services below (postgres, api, frontend, pgadmin) are LEGACY from the original template
+# and are NOT used. They are kept commented out for reference only.
+#
+# This is a static site generator that compiles to HTML/CSS/JS and deploys to GitHub Pages.
+# There is NO backend server, NO database, NO authentication.
+# All data is stored in client/public/projects.json
+
+# LEGACY SERVICES (NOT USED):
+#
+#  postgres:
+#    image: postgres:16-alpine
+#    container_name: cortex-arsenal-db
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_DB: cortex_arsenal
+#      POSTGRES_USER: arsenal_user
+#      POSTGRES_PASSWORD: ${DB_PASSWORD:-dev_password_change_in_prod}
+#      PGDATA: /var/lib/postgresql/data/pgdata
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#      - ./db/init:/docker-entrypoint-initdb.d
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U arsenal_user -d cortex_arsenal"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#    networks:
+#      - arsenal-network
+#
+#  api:
+#    build:
+#      context: ./server
+#      dockerfile: Dockerfile
+#    container_name: cortex-arsenal-api
+#    restart: unless-stopped
+#    environment:
+#      NODE_ENV: ${NODE_ENV:-development}
+#      DATABASE_URL: postgresql://arsenal_user:${DB_PASSWORD:-dev_password_change_in_prod}@postgres:5432/cortex_arsenal
+#      PORT: 3001
+#      JWT_SECRET: ${JWT_SECRET:-dev_secret_change_in_prod}
+#      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+#    ports:
+#      - "3001:3001"
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    volumes:
+#      - ./server:/app
+#      - /app/node_modules
+#      - uploaded_files:/app/uploads
+#    networks:
+#      - arsenal-network
+#
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.frontend
+#    container_name: cortex-arsenal-frontend
+#    restart: unless-stopped
+#    environment:
+#      VITE_API_URL: http://localhost:3001
+#    ports:
+#      - "5173:5173"
+#    volumes:
+#      - ./client:/app/client
+#      - /app/client/node_modules
+#    networks:
+#      - arsenal-network
+#    command: npm run dev
+#
+#  pgadmin:
+#    image: dpage/pgadmin4:latest
+#    container_name: cortex-arsenal-pgadmin
+#    restart: unless-stopped
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@cortex-arsenal.local
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+#      PGADMIN_CONFIG_SERVER_MODE: "False"
+#    ports:
+#      - "5050:80"
+#    depends_on:
+#      - postgres
+#    networks:
+#      - arsenal-network
+#    profiles:
+#      - tools
+
+# volumes:
+#   postgres_data:
+#     driver: local
+#   uploaded_files:
+#     driver: local
